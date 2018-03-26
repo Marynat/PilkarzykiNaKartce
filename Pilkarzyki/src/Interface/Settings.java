@@ -39,7 +39,7 @@ public class Settings extends JFrame {
 		back.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				dispose();
-				new MainMenu();
+				new MainMenu(800, 600);
 			}
 		});
 		add(back);

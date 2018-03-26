@@ -8,15 +8,16 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 
 
+
 public class MainMenu extends JFrame {
 
-
+	
     JButton newGame = new JButton("Nowa Gra");
     JButton settings = new JButton("Ustawienia");
-    JButton exit = new JButton("Wyjœcie");
+    JButton exit = new JButton("Wyjscie");
 
-    public MainMenu() {
-        newGame.setBounds(300, 40, 200, 30);
+    public MainMenu(int WIDTH, int HEIGHT) {
+        newGame.setBounds(WIDTH/2 - 100, 40, 200, 30);
         newGame.setBackground(Color.YELLOW);
         newGame.setForeground(Color.BLUE);
         newGame.addActionListener(new ActionListener() {
@@ -27,7 +28,7 @@ public class MainMenu extends JFrame {
 		});
         add(newGame);
         
-        settings.setBounds(300, 90, 200, 30);
+        settings.setBounds(WIDTH/2 - 100, 90, 200, 30);
         settings.setBackground(Color.YELLOW);
         settings.setForeground(Color.BLUE);
         settings.addActionListener(new ActionListener() {
@@ -38,7 +39,7 @@ public class MainMenu extends JFrame {
 		});
         add(settings);
         
-        exit.setBounds(300, 140, 200, 30);
+        exit.setBounds(WIDTH/2 - 100, 140, 200, 30);
         exit.setBackground(Color.YELLOW);
         exit.setForeground(Color.BLUE);
         exit.addActionListener(new ActionListener() {
@@ -47,10 +48,11 @@ public class MainMenu extends JFrame {
 			}
 		});
         add(exit);
+        
        
 
         setLayout(null);
-        setSize(800, 600);
+        setSize(WIDTH, HEIGHT);
         setBackground(Color.BLACK);
         setTitle("Pilkarzyki na kartce");
         setLocationRelativeTo(null);
@@ -59,6 +61,6 @@ public class MainMenu extends JFrame {
     }
 
     public static void main(String[] args) {
-        new MainMenu();
+        new MainMenu(800, 600);
     }
 }

@@ -7,6 +7,8 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 
+import Game.MainScreenFrame;
+
 public class NewGame extends JFrame{
 
 	JButton pvp = new JButton("Gracz vs Gracz");
@@ -19,6 +21,8 @@ public class NewGame extends JFrame{
 		pvp.setForeground(Color.BLUE);
 		pvp.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				dispose();
+				new MainScreenFrame();
 			}
 		});
 		add(pvp);
@@ -38,7 +42,7 @@ public class NewGame extends JFrame{
 		back.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				dispose();
-				new MainMenu();
+				new MainMenu(800, 600);
 			}
 		});
 		add(back);
