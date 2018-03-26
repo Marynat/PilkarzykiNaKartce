@@ -11,6 +11,8 @@ import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.geom.Ellipse2D;
@@ -22,7 +24,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.Timer;
 
-public class MainScreenFrame extends JFrame{
+public class MainScreenFrame extends JFrame implements KeyListener{
 	/*
 	 * public MainScreenFrame() { init(); }
 	 * 
@@ -44,6 +46,8 @@ public class MainScreenFrame extends JFrame{
 	Canvas canvas = new Canvas();
 	
 	JButton exit = new JButton("Wyjscie");
+	
+	Boolean mainLoop = true;
 	
 
 	GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
@@ -92,7 +96,7 @@ public class MainScreenFrame extends JFrame{
 		
 		Point last = MouseInfo.getPointerInfo().getLocation();
 
-		while (true) {
+		while (mainLoop) {
 			try {
 				// count Frames per second...
 				lastTime = curTime;
@@ -104,6 +108,8 @@ public class MainScreenFrame extends JFrame{
 					frames = 0;
 				}
 				++frames;
+
+				addKeyListener(this);
 
 				// clear back buffer...
 				g2d = bi.createGraphics();
@@ -128,6 +134,17 @@ public class MainScreenFrame extends JFrame{
 					int h = 50 + (i*20);
 					g2d.drawLine(x, y, w, h);
 				}
+				//upper Goal Post
+				g2d.drawLine(380, 30, 420, 30);
+				g2d.drawLine(380, 30, 380, 50);
+				g2d.drawLine(420, 30, 420, 50);
+				
+				//lower goal post
+				g2d.drawLine(380, 270, 420, 270);
+				g2d.drawLine(380, 270, 380, 250);
+				g2d.drawLine(420, 270, 420, 250);
+				
+				
 				g2d.fill(new Ellipse2D.Double(centerX - 2.5, centerY - 2.5, 5, 5));
 
 				// display frames per second...
@@ -171,6 +188,11 @@ public class MainScreenFrame extends JFrame{
                 	g2d.drawLine((int)centerX, (int)centerY, (int)centerX-20, (int)centerY-20);
                 }
                 
+                if(p.x >= 1315 && p.x <= 1360 && p.y >= 205 && p.y <= 235) {
+                	mainLoop = false;
+                	System.out.println("Zatrzymano petle gg");
+                }
+                
 
 
 				// Blit image and flip...
@@ -184,6 +206,7 @@ public class MainScreenFrame extends JFrame{
 				if (!buffer.contentsLost())
 					buffer.show();
 
+
 				// Let the OS have a little time...
 				Thread.yield();
 			} finally {
@@ -194,11 +217,31 @@ public class MainScreenFrame extends JFrame{
 					g2d.dispose();
 			}
 			
+			
+			
 	        setLocationRelativeTo(null);
-	        //setLayout(null);
+	        setLayout(null);
 			setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		}
 		
 	}
+	
+	@Override
+    public void keyPressed(KeyEvent evt) {
+		char esc = evt.getKeyChar();
+		System.out.println("nacisnieto klawisz: " + esc);
+        if(esc == 'r') {
+            mainLoop = true;
+        }
+    }
+ 
+    @Override
+    public void keyReleased(KeyEvent evt) {
+    }
+ 
+    @Override
+    public void keyTyped(KeyEvent evt) {
 
+    }
+	
 }
