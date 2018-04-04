@@ -63,16 +63,28 @@ public class MainScreenFrame extends JFrame implements KeyListener{
 
 	public MainScreenFrame() {
 		setIgnoreRepaint(true);
-		
+		setSize(800,600);
 
 		// Create canvas for painting...
 		canvas.setIgnoreRepaint(true);
-		canvas.setSize(800, 600);
+		canvas.setSize(800, 400);
+		
+		
 
 		// Add canvas to game window...
 		add(canvas);
 		
-		pack();
+		exit.setBounds(200, 600, 100, 30);
+        exit.setBackground(Color.YELLOW);
+        exit.setForeground(Color.BLUE);
+        exit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+			}
+		});
+		add(exit);
+		
+		//pack();
 		setVisible(true);
 
 		// Create BackBuffer...
@@ -135,6 +147,9 @@ public class MainScreenFrame extends JFrame implements KeyListener{
 					g2d.drawLine(x, y, w, h);
 				}
 				//upper Goal Post
+				
+				System.out.print("dsadasdasd\n");
+				
 				g2d.drawLine(380, 30, 420, 30);
 				g2d.drawLine(380, 30, 380, 50);
 				g2d.drawLine(420, 30, 420, 50);
@@ -158,10 +173,10 @@ public class MainScreenFrame extends JFrame implements KeyListener{
                     last = p;
                 }
                 
-                g2d.drawString(String.format("Mysz x: %s y: %s", p.x, p.y), 700, 20);
+                g2d.drawString(String.format("Mysz x: %s y: %s", p.x, p.y), 600, 20);
                 
                 
-                double theta = Math.atan2(p.x - 960, p.y - 390);
+                double theta = Math.atan2(p.x - 690, p.y - 225);
                 theta += Math.PI/2.0;
                 double angle = Math.toDegrees(theta);
 
@@ -188,7 +203,7 @@ public class MainScreenFrame extends JFrame implements KeyListener{
                 	g2d.drawLine((int)centerX, (int)centerY, (int)centerX-20, (int)centerY-20);
                 }
                 
-                if(p.x >= 1315 && p.x <= 1360 && p.y >= 205 && p.y <= 235) {
+                if(p.x >= 1050 && p.x <= 1080 && p.y >= 55 && p.y <= 80) {
                 	mainLoop = false;
                 	System.out.println("Zatrzymano petle gg");
                 }
@@ -209,6 +224,12 @@ public class MainScreenFrame extends JFrame implements KeyListener{
 
 				// Let the OS have a little time...
 				Thread.yield();
+				try {
+					Thread.sleep(1);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			} finally {
 				// release resources
 				if (graphics != null)
@@ -218,7 +239,7 @@ public class MainScreenFrame extends JFrame implements KeyListener{
 			}
 			
 			
-			
+			setTitle("Pilkarzyki na kartce");
 	        setLocationRelativeTo(null);
 	        setLayout(null);
 			setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

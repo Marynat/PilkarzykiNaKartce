@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 
+import Game.MainScreenComponents;
 import Game.MainScreenFrame;
 
 public class NewGame extends JFrame{
@@ -22,7 +23,8 @@ public class NewGame extends JFrame{
 		pvp.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				dispose();
-				new MainScreenFrame();
+				MainScreenComponents comp = new MainScreenComponents();
+				comp.setVisible(true);
 			}
 		});
 		add(pvp);
