@@ -32,107 +32,189 @@ public class MainScreenComponents extends JFrame implements ActionListener {
 	double centerY;
 	double angle;
 	String direction;
-	ArrayList<Point> edges = new ArrayList<Point>();
 	private Player playerOne = new Player(true);
 	private Player playerTwo = new Player(false);
+	private VisitedList visitedList = new VisitedList();
+
+	Point nowy = new Point();
+	VisitedPoints visit = new VisitedPoints();
+
+	boolean canI = true;
+	boolean canI2 = true;
+	boolean canI3 = true;
+
+	void initiatePoints() {
+		for (int i = 0; i < 9; i++) {
+			for (int j = 0; j < 11; j++) {
+				int x = 240 + (i*40);
+				int y = 50 + (j*40);
+				if (x == 240 || x == 560 || y == 50 || y == 450) {
+					visit.setHasBeenVisited(true);
+				}
+				visit.setVis(x, y);
+				System.out.print(visit.vis + "; ");
+				visitedList.visited.add(visit);
+				visit = new VisitedPoints();
+			}
+		}
+	}
+
+	void switchPlayers() {
+		playerOne.myMove = playerTwo.myMove;
+		playerTwo.myMove = !playerTwo.myMove;
+
+	}
+
 	MouseListener mouseL = new MouseListener() {
-		
+
 		@Override
 		public void mouseReleased(MouseEvent e) {
 			System.out.println("Myszka zwolniona");
 			Move move = new Move();
+			Move mov;
 			move.setPrev(centerX, centerY);
-			
-			if(direction.equals("N")) {
-				centerY -= 20;
-				move.setNext(centerX, centerY);				
-			}else if(direction.equals("NE")) {
-				centerX +=20; centerY -= 20;
-				move.setNext(centerX, centerY);				
-			}else if(direction.equals("E")) {
-				centerX += 20;
-				move.setNext(centerX, centerY);				
-			}else if(direction.equals("SE")) {
-				centerX += 20; centerY += 20;
-				move.setNext(centerX, centerY);				
-			}else if(direction.equals("S")) {
-				centerY += 20;
-				move.setNext(centerX, centerY);				
-			}else if(direction.equals("SW")) {
-				centerX -= 20; centerY += 20;
-				move.setNext(centerX, centerY);				
-			}else if(direction.equals("W")) {
-				centerX -= 20;
-				move.setNext(centerX, centerY);				
-			}else if(direction.equals("NW")) {
-				centerX -= 20; centerY -= 20;
-				move.setNext(centerX, centerY);				
+			nowy.x = (int) centerX;
+			nowy.y = (int) centerY;
+
+			if (direction.equals("")) {
+				System.out.println("Nie da sie wykonac ruchu");
+				move.setNext(centerX, centerY);
+			} else if (direction.equals("N")) {
+				nowy.y -= 40;
+			} else if (direction.equals("NE")) {
+				nowy.x += 40;
+				nowy.y -= 40;
+				move.setNext(centerX, centerY);
+			} else if (direction.equals("E")) {
+				nowy.x += 40;
+				move.setNext(centerX, centerY);
+			} else if (direction.equals("SE")) {
+				nowy.x += 40;
+				nowy.y += 40;
+				move.setNext(centerX, centerY);
+			} else if (direction.equals("S")) {
+				nowy.y += 40;
+				move.setNext(centerX, centerY);
+			} else if (direction.equals("SW")) {
+				nowy.x -= 40;
+				nowy.y += 40;
+				move.setNext(centerX, centerY);
+			} else if (direction.equals("W")) {
+				nowy.x -= 40;
+				move.setNext(centerX, centerY);
+			} else if (direction.equals("NW")) {
+				nowy.x -= 40;
+				nowy.y -= 40;
+				move.setNext(centerX, centerY);
 			}
-			
-			System.out.println("prev x: " + move.prev.x + " prev y: " + move.prev.y + " next x: " + move.next.x + " next y: " + move.next.y);
-			if(checkPlayer(playerOne)) {
-			playerOne.moves.add(move);
-			}else playerTwo.moves.add(move);
-			
-			playerOne.myMove = playerTwo.myMove;
-			playerTwo.myMove = !playerTwo.myMove;
-			
+
+			for (Iterator<Move> it = playerOne.moves.iterator(); it.hasNext();) {
+				mov = it.next();
+				if ((centerX == mov.prev.x && centerY == mov.prev.y && nowy.x == mov.next.x && nowy.y == mov.next.y)
+						|| (centerX == mov.next.x && centerY == mov.next.y && nowy.x == mov.prev.x
+								&& nowy.y == mov.prev.y)) {
+					canI = false;
+					break;
+				} else {
+					canI = true;
+				}
+			}
+
+			for (Iterator<Move> it = playerTwo.moves.iterator(); it.hasNext();) {
+				mov = it.next();
+				if ((centerX == mov.prev.x && centerY == mov.prev.y && nowy.x == mov.next.x && nowy.y == mov.next.y)
+						|| (centerX == mov.next.x && centerY == mov.next.y && nowy.x == mov.prev.x
+								&& nowy.y == mov.prev.y)) {
+					canI2 = false;
+					break;
+				} else {
+					canI2 = true;
+				}
+			}
+			if (canI && canI2) {
+				move.setNext(nowy.x, nowy.y);
+				System.out.println("da sie");
+
+				for (Iterator<VisitedPoints> it2 = visitedList.visited.iterator(); it2.hasNext();) {
+					visit = it2.next();
+					System.out.println(visit.vis + " " + visit.hasBeenVisited);
+					if (centerX == visit.vis.x && centerY == visit.vis.y && visit.hasBeenVisited) {
+						canI3 = false;
+						break;
+					}else if(centerX == visit.vis.x && centerY == visit.vis.y && !visit.hasBeenVisited) {
+						visit.setHasBeenVisited(true);
+					}
+					else {
+						canI3 = true;
+
+					}
+				}
+				if (canI3)
+					switchPlayers();
+
+				centerX = nowy.x;
+				centerY = nowy.y;
+
+			} else {
+				System.out.println(canI + " " + canI2);
+				move.setNext(centerX, centerY);
+			}
+
+			System.out.println("prev x: " + move.prev.x + " prev y: " + move.prev.y + " next x: " + move.next.x
+					+ " next y: " + move.next.y);
+			if (checkPlayer(playerOne)) {
+				playerOne.moves.add(move);
+			} else
+				playerTwo.moves.add(move);
 		}
-		
+
 		@Override
 		public void mousePressed(MouseEvent e) {
 			System.out.println("Myszka nacisnieta");
 		}
-		
+
 		@Override
 		public void mouseExited(MouseEvent e) {
 			// TODO Auto-generated method stub
-			
+
 		}
-		
+
 		@Override
 		public void mouseEntered(MouseEvent e) {
 			// TODO Auto-generated method stub
-			
+
 		}
-		
+
 		@Override
 		public void mouseClicked(MouseEvent e) {
 			// TODO Auto-generated method stub
-			
+
 		}
 	};
-	private Point last, p, screenCenter;
+	private Point last, p;
 	private int fps = 60;
 	private int frameCount = 0;
 
 	public MainScreenComponents() {
-			super("Fixed Timestep Game Loop Test");
-			Container cp = getContentPane();
-			cp.setLayout(new BorderLayout());
-			JPanel p = new JPanel();
-			p.setLayout(new GridLayout(1, 2));
-			p.add(startButton);
-			p.add(quitButton);
-			cp.add(gamePanel, BorderLayout.CENTER);
-			cp.add(p, BorderLayout.SOUTH);
-			setSize(800, 600);
-			
-			Point edge = new Point();
-			for(int i = 0; i< 50; i++) {
-				edge.x = 0;
-				edge.y = 0;
-				edges.add(edge);
-			}
-			
-			gamePanel.addMouseListener(mouseL);
+		super("Gracz vs gracz");
+		Container cp = getContentPane();
+		cp.setLayout(new BorderLayout());
+		JPanel p = new JPanel();
+		p.setLayout(new GridLayout(1, 2));
+		p.add(startButton);
+		p.add(quitButton);
+		cp.add(gamePanel, BorderLayout.CENTER);
+		cp.add(p, BorderLayout.SOUTH);
+		setSize(800, 600);
 
-			startButton.addActionListener(this);
-			quitButton.addActionListener(this);
-			//setIgnoreRepaint(true);
-			setLocationRelativeTo(null);
-		}
-	
+		gamePanel.addMouseListener(mouseL);
+		
+		initiatePoints();
+
+		startButton.addActionListener(this);
+		quitButton.addActionListener(this);
+		setLocationRelativeTo(null);
+	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -251,11 +333,9 @@ public class MainScreenComponents extends JFrame implements ActionListener {
 	private class GamePanel extends JPanel {
 		float interpolation;
 
-		
-
 		public GamePanel() {
 			centerX = 400;
-			centerY = 150;
+			centerY = 250;
 			last = p = MouseInfo.getPointerInfo().getLocation();
 		}
 
@@ -264,127 +344,156 @@ public class MainScreenComponents extends JFrame implements ActionListener {
 		}
 
 		public void update() {
-			
+
 			p = MouseInfo.getPointerInfo().getLocation();
 		}
 
 		public void paintComponent(Graphics g) {
 			// BS way of clearing out the old rectangle to save CPU.
 			g.setColor(getBackground());
-			//g.fillRect(lastDrawX - 1, lastDrawY - 1, ballWidth + 2, ballHeight + 2);
-			g.setColor(Color.GREEN);
+			// g.fillRect(lastDrawX - 1, lastDrawY - 1, ballWidth + 2, ballHeight + 2);
+			g.setColor(Color.WHITE);
 			g.fillRect(0, 0, 800, 600);
-			
+
 			g.setColor(Color.black);
-           
-			if(checkPlayer(playerOne)) {
-				 g.drawString("Ruch gracza pierwszego", 300, 10);
-				}else g.drawString("Ruch gracza drugiego", 300, 10);
+
+			if (checkPlayer(playerOne)) {
+				g.drawString("Ruch gracza pierwszego", 300, 500);
+			} else
+				g.drawString("Ruch gracza drugiego", 300, 500);
 
 			for (int i = 0; i < 9; ++i) {
 				g.setColor(Color.BLACK);
-				int x = 320 + (i* 20);
+				int x = 240 + (i * 40);
 				int y = 50;
-				int w = 320 + (i* 20);
-				int h = 250;
+				int w = 240 + (i * 40);
+				int h = 450;
 				g.drawLine(x, y, w, h);
+				g.drawLine(x - 1, y, w - 1, h);
+				g.drawLine(x + 1, y, w + 1, h);
 			}
 			for (int i = 0; i < 11; ++i) {
 				g.setColor(Color.BLACK);
-				int x = 320;
-				int y = 50 + (i*20);
-				int w = 480;
-				int h = 50 + (i*20);
+				int x = 240;
+				int y = 50 + (i * 40);
+				int w = 560;
+				int h = 50 + (i * 40);
 				g.drawLine(x, y, w, h);
+				g.drawLine(x, y - 1, w, h - 1);
+				g.drawLine(x, y + 1, w, h + 1);
 			}
-			//upper Goal Post
-			
-			g.drawLine(380, 30, 420, 30);
-			g.drawLine(380, 30, 380, 50);
-			g.drawLine(420, 30, 420, 50);
-			
-			//lower goal post
-			g.drawLine(380, 270, 420, 270);
-			g.drawLine(380, 270, 380, 250);
-			g.drawLine(420, 270, 420, 250);
-			
-			
+
+			g.fillOval((int) (centerX - 4), (int) (centerY - 4), 8, 8);
+			// upper Goal Post
+
+			g.drawLine(360, 10, 440, 10);
+			g.drawLine(360, 10, 360, 50);
+			g.drawLine(440, 10, 440, 50);
+
+			g.drawLine(360, 10 - 1, 440, 10 - 1);
+			g.drawLine(360 - 1, 10, 360 - 1, 50);
+			g.drawLine(440 - 1, 10, 440 - 1, 50);
+
+			g.drawLine(360, 10 + 1, 440, 10 + 1);
+			g.drawLine(360 + 1, 10, 360 + 1, 50);
+			g.drawLine(440 + 1, 10, 440 + 1, 50);
+
+			// lower goal post
+			g.drawLine(360, 490, 440, 490);
+			g.drawLine(360, 490, 360, 450);
+			g.drawLine(440, 490, 440, 450);
+
 			// drawing of visited lines of player one
 			Iterator<Move> it;
 			Move mov = new Move();
 			g.setColor(Color.BLUE);
-			for(it = playerOne.moves.iterator();it.hasNext(); ) {
+			for (it = playerOne.moves.iterator(); it.hasNext();) {
 				mov = it.next();
-				g.drawLine((int)mov.prev.x, (int)mov.prev.y, (int)mov.next.x, (int)mov.next.y);
-				
+				g.drawLine((int) mov.prev.x, (int) mov.prev.y, (int) mov.next.x, (int) mov.next.y);
+
 			}
-			
+
 			// drawing of visited lines of player two
-			g.setColor(Color.PINK);
-			for(it = playerTwo.moves.iterator();it.hasNext(); ) {
+			g.setColor(Color.RED);
+			for (it = playerTwo.moves.iterator(); it.hasNext();) {
 				mov = it.next();
-				g.drawLine((int)mov.prev.x, (int)mov.prev.y, (int)mov.next.x, (int)mov.next.y);
-				
+				g.drawLine((int) mov.prev.x, (int) mov.prev.y, (int) mov.next.x, (int) mov.next.y);
+
 			}
-			
-			//lastDrawX = drawX;
-			//lastDrawY = drawY;
-			
-			if(p.x != last.x || p.y != last.y)
-            {
-                last = p;
-            }
-            g.setColor(Color.black);
-            g.drawString("Pozycja myszy: " + p.x+ " " + p.y, 600, 20);
-            
-            
-            double theta = Math.atan2(p.x - (285 + centerX), p.y - (105 + centerY));
-            theta += Math.PI/2.0;
-            angle = Math.toDegrees(theta);
 
-                if(angle < 0){
-                    angle += 360;
-                }
-                
-            direction = new String("");
+			// lastDrawX = drawX;
+			// lastDrawY = drawY;
 
-            g.setColor(Color.RED);
-            if(angle > 337.5 || angle <= 22.5 ) {
-            	g.drawLine((int)centerX, (int)centerY, (int)centerX-20, (int)centerY);
-            	direction = "W";
-            }else if(angle > 22.5 && angle <= 67.5 ) {
-            	g.drawLine((int)centerX, (int)centerY, (int)centerX-20, (int)centerY+20);
-            	direction = "SW";
-            }else if(angle > 67.5 && angle <= 112.5 ) {
-            	g.drawLine((int)centerX, (int)centerY, (int)centerX, (int)centerY+20);
-            	direction = "S";
-            }else if(angle > 112.5 && angle <= 157.5 ) {
-            	g.drawLine((int)centerX, (int)centerY, (int)centerX+20, (int)centerY+20);
-            	direction = "SE";
-            }else if(angle > 157.5 && angle <= 202.5 ) {
-            	g.drawLine((int)centerX, (int)centerY, (int)centerX+20, (int)centerY);
-            	direction = "E";
-            }else if(angle > 202.5 && angle <= 247.5 ) {
-            	g.drawLine((int)centerX, (int)centerY, (int)centerX+20, (int)centerY-20);
-            	direction = "NE";
-            }else if(angle > 247.5 && angle <= 292.5 ) {
-            	g.drawLine((int)centerX, (int)centerY, (int)centerX, (int)centerY-20);
-            	direction = "N";
-            }else if(angle > 292.5 && angle <= 337.5 ) {
-            	g.drawLine((int)centerX, (int)centerY, (int)centerX-20, (int)centerY-20);
-            	direction = "NW";
-            }
+			if (p.x != last.x || p.y != last.y) {
+				last = p;
+			}
+			g.setColor(Color.black);
+			g.drawString("Pozycja myszy: " + (p.x - 285) + " " + (p.y - 105), 600, 10);
+
+			double theta = Math.atan2(p.x - (285 + centerX), p.y - (105 + centerY));
+			theta += Math.PI / 2.0;
+			angle = Math.toDegrees(theta);
+
+			if (angle < 0) {
+				angle += 360;
+			}
+
+			direction = new String("");
+
+			g.setColor(Color.ORANGE);
+			if (angle > 337.5 || angle <= 22.5) {
+				if (centerX != 240 && centerY != 50 && centerY != 450) {
+					g.drawLine((int) centerX, (int) centerY, (int) centerX - 40, (int) centerY);
+					direction = "W";
+				}
+			} else if (angle > 22.5 && angle <= 67.5) {
+				if (centerX != 240 && centerY != 450) {
+					g.drawLine((int) centerX, (int) centerY, (int) centerX - 40, (int) centerY + 40);
+					direction = "SW";
+				}
+			} else if (angle > 67.5 && angle <= 112.5) {
+				if (centerX != 240 && centerX != 560 && centerY != 450) {
+					g.drawLine((int) centerX, (int) centerY, (int) centerX, (int) centerY + 40);
+					direction = "S";
+				}
+			} else if (angle > 112.5 && angle <= 157.5) {
+				if (centerX != 560 && centerY != 450) {
+					g.drawLine((int) centerX, (int) centerY, (int) centerX + 40, (int) centerY + 40);
+					direction = "SE";
+				}
+			} else if (angle > 157.5 && angle <= 202.5) {
+				if (centerX != 560 && centerY != 50 && centerY != 450) {
+					g.drawLine((int) centerX, (int) centerY, (int) centerX + 40, (int) centerY);
+					direction = "E";
+				}
+			} else if (angle > 202.5 && angle <= 247.5) {
+				if (centerX != 560 && centerY != 50) {
+					g.drawLine((int) centerX, (int) centerY, (int) centerX + 40, (int) centerY - 40);
+					direction = "NE";
+				}
+			} else if (angle > 247.5 && angle <= 292.5) {
+				if (centerX != 240 && centerX != 560 && centerY != 50) {
+					g.drawLine((int) centerX, (int) centerY, (int) centerX, (int) centerY - 40);
+					direction = "N";
+				}
+			} else if (angle > 292.5 && angle <= 337.5) {
+				if (centerX != 240 && centerY != 50) {
+					g.drawLine((int) centerX, (int) centerY, (int) centerX - 40, (int) centerY - 40);
+					direction = "NW";
+				}
+			}
 
 			g.setColor(Color.BLACK);
 			g.drawString("FPS: " + fps, 5, 10);
-			
-			//g.clearRect(0, 0, 800, 500);
+
+			// g.clearRect(0, 0, 800, 500);
 
 			frameCount++;
 		}
 	}
+
 	Boolean checkPlayer(Player p) {
-		if(p.myMove.equals(true))
+		if (p.myMove.equals(true))
 			return true;
 		return false;
 	}
