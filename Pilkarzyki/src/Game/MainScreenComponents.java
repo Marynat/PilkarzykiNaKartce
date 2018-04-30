@@ -21,6 +21,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
+import Interface.WinningScreen;
+
 public class MainScreenComponents extends JFrame implements ActionListener {
 
 	private GamePanel gamePanel = new GamePanel();
@@ -63,6 +65,17 @@ public class MainScreenComponents extends JFrame implements ActionListener {
 		playerOne.myMove = playerTwo.myMove;
 		playerTwo.myMove = !playerTwo.myMove;
 
+	}
+	
+	int checkWinner() {
+		if(centerX >= 360 && centerX <= 440) {
+			if (centerY == 10) {
+				return 1;
+			}else if (centerY == 490) {
+				return 2;
+			}
+		}
+		return 0;
 	}
 
 	MouseListener mouseL = new MouseListener() {
@@ -349,7 +362,7 @@ public class MainScreenComponents extends JFrame implements ActionListener {
 		}
 
 		public void paintComponent(Graphics g) {
-			// BS way of clearing out the old rectangle to save CPU.
+			// BS way of clearing out the old map to save CPU.
 			g.setColor(getBackground());
 			// g.fillRect(lastDrawX - 1, lastDrawY - 1, ballWidth + 2, ballHeight + 2);
 			g.setColor(Color.WHITE);
@@ -362,7 +375,7 @@ public class MainScreenComponents extends JFrame implements ActionListener {
 			} else
 				g.drawString("Ruch gracza drugiego", 300, 500);
 
-			for (int i = 0; i < 9; ++i) {
+			for (int i = 0; i < 9; ++i) { //vertical lines
 				g.setColor(Color.BLACK);
 				int x = 240 + (i * 40);
 				int y = 50;
@@ -372,7 +385,7 @@ public class MainScreenComponents extends JFrame implements ActionListener {
 				g.drawLine(x - 1, y, w - 1, h);
 				g.drawLine(x + 1, y, w + 1, h);
 			}
-			for (int i = 0; i < 11; ++i) {
+			for (int i = 0; i < 11; ++i) { //horizontal lines
 				g.setColor(Color.BLACK);
 				int x = 240;
 				int y = 50 + (i * 40);
@@ -403,6 +416,14 @@ public class MainScreenComponents extends JFrame implements ActionListener {
 			g.drawLine(360, 490, 360, 450);
 			g.drawLine(440, 490, 440, 450);
 
+			g.drawLine(360, 490-1, 440, 490-1);
+			g.drawLine(360-1, 490, 360-1, 450);
+			g.drawLine(440-1, 490, 440-1, 450);
+			
+			g.drawLine(360, 490+1, 440, 490+1);
+			g.drawLine(360+1, 490, 360+1, 450);
+			g.drawLine(440+1, 490, 440+1, 450);
+			
 			// drawing of visited lines of player one
 			Iterator<Move> it;
 			Move mov = new Move();
@@ -442,42 +463,42 @@ public class MainScreenComponents extends JFrame implements ActionListener {
 
 			g.setColor(Color.ORANGE);
 			if (angle > 337.5 || angle <= 22.5) {
-				if (centerX != 240 && centerY != 50 && centerY != 450) {
+				if ((centerX != 240 && centerY != 50 && centerY != 450) || (centerX == 400 && centerY == 50) || (centerX == 440 && centerY == 50) || (centerX == 440 && centerY == 450) || (centerX == 400 && centerY == 450)) {
 					g.drawLine((int) centerX, (int) centerY, (int) centerX - 40, (int) centerY);
 					direction = "W";
 				}
 			} else if (angle > 22.5 && angle <= 67.5) {
-				if (centerX != 240 && centerY != 450) {
+				if ((centerX != 240 && centerY != 450) || (centerX == 400 && centerY == 450) || (centerX == 440 && centerY == 450)) {
 					g.drawLine((int) centerX, (int) centerY, (int) centerX - 40, (int) centerY + 40);
 					direction = "SW";
 				}
 			} else if (angle > 67.5 && angle <= 112.5) {
-				if (centerX != 240 && centerX != 560 && centerY != 450) {
+				if ((centerX != 240 && centerX != 560 && centerY != 450) || (centerX == 400 && centerY == 450)) {
 					g.drawLine((int) centerX, (int) centerY, (int) centerX, (int) centerY + 40);
 					direction = "S";
 				}
 			} else if (angle > 112.5 && angle <= 157.5) {
-				if (centerX != 560 && centerY != 450) {
+				if ((centerX != 560 && centerY != 450) || (centerX == 400 && centerY == 450) || (centerX == 360 && centerY == 450)) {
 					g.drawLine((int) centerX, (int) centerY, (int) centerX + 40, (int) centerY + 40);
 					direction = "SE";
 				}
 			} else if (angle > 157.5 && angle <= 202.5) {
-				if (centerX != 560 && centerY != 50 && centerY != 450) {
+				if ((centerX != 560 && centerY != 50 && centerY != 450) || (centerX == 400 && centerY == 50) || (centerX == 360 && centerY == 50) || (centerX == 360 && centerY == 450) || (centerX == 400 && centerY == 450)) {
 					g.drawLine((int) centerX, (int) centerY, (int) centerX + 40, (int) centerY);
 					direction = "E";
 				}
 			} else if (angle > 202.5 && angle <= 247.5) {
-				if (centerX != 560 && centerY != 50) {
+				if ((centerX != 560 && centerY != 50) || (centerX == 400 && centerY == 50) || (centerX == 360 && centerY == 50)) {
 					g.drawLine((int) centerX, (int) centerY, (int) centerX + 40, (int) centerY - 40);
 					direction = "NE";
 				}
 			} else if (angle > 247.5 && angle <= 292.5) {
-				if (centerX != 240 && centerX != 560 && centerY != 50) {
+				if ((centerX != 240 && centerX != 560 && centerY != 50) || (centerX == 400 && centerY == 50)) {
 					g.drawLine((int) centerX, (int) centerY, (int) centerX, (int) centerY - 40);
 					direction = "N";
 				}
 			} else if (angle > 292.5 && angle <= 337.5) {
-				if (centerX != 240 && centerY != 50) {
+				if ((centerX != 240 && centerY != 50) || (centerX == 400 && centerY == 50) || (centerX == 440 && centerY == 50)) {
 					g.drawLine((int) centerX, (int) centerY, (int) centerX - 40, (int) centerY - 40);
 					direction = "NW";
 				}
@@ -487,6 +508,16 @@ public class MainScreenComponents extends JFrame implements ActionListener {
 			g.drawString("FPS: " + fps, 5, 10);
 
 			// g.clearRect(0, 0, 800, 500);
+			g.setColor(Color.WHITE);
+			if(checkWinner() == 1) {
+				running = false;
+				dispose();
+				new WinningScreen(400, 200, "jeden.");
+			}else if(checkWinner()== 2) {
+				running = false;
+				dispose();
+				new WinningScreen(400, 200, "dwa.");
+			}
 
 			frameCount++;
 		}
