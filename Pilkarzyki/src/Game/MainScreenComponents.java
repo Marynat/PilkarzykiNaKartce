@@ -60,6 +60,17 @@ public class MainScreenComponents extends JFrame implements ActionListener {
 			}
 		}
 	}
+	
+	void clearPoints(){
+		for (Iterator<VisitedPoints> it3 = visitedList.visited.iterator(); it3.hasNext();) {
+			visit = it3.next();
+				if (visit.vis.x == 240 || visit.vis.x == 560 || visit.vis.y == 50 || visit.vis.y == 450) {
+					visit.setHasBeenVisited(true);
+				}else {
+					visit.setHasBeenVisited(false);
+			}
+		}
+	}
 
 	void switchPlayers() {
 		playerOne.myMove = playerTwo.myMove;
@@ -511,10 +522,16 @@ public class MainScreenComponents extends JFrame implements ActionListener {
 			g.setColor(Color.WHITE);
 			if(checkWinner() == 1) {
 				running = false;
+				//playerOne.moves.clear();
+				//playerTwo.moves.clear();
+				clearPoints();
 				dispose();
 				new WinningScreen(400, 200, "jeden.");
 			}else if(checkWinner()== 2) {
 				running = false;
+				//playerOne.moves.clear();
+				//playerTwo.moves.clear();
+				clearPoints();
 				dispose();
 				new WinningScreen(400, 200, "dwa.");
 			}
