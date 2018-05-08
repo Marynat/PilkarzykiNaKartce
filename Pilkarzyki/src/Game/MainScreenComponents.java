@@ -19,6 +19,7 @@ import java.util.Random;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
 import Interface.WinningScreen;
@@ -37,6 +38,8 @@ public class MainScreenComponents extends JFrame implements ActionListener {
 	private Player playerOne = new Player(true);
 	private Player playerTwo = new Player(false);
 	private VisitedList visitedList = new VisitedList();
+	
+	Container conP;
 
 	Point nowy = new Point();
 	VisitedPoints visit = new VisitedPoints();
@@ -161,7 +164,7 @@ public class MainScreenComponents extends JFrame implements ActionListener {
 
 				for (Iterator<VisitedPoints> it2 = visitedList.visited.iterator(); it2.hasNext();) {
 					visit = it2.next();
-					System.out.println(visit.vis + " " + visit.hasBeenVisited);
+					//System.out.println(visit.vis + " " + visit.hasBeenVisited);
 					if (centerX == visit.vis.x && centerY == visit.vis.y && visit.hasBeenVisited) {
 						canI3 = false;
 						break;
@@ -221,14 +224,14 @@ public class MainScreenComponents extends JFrame implements ActionListener {
 
 	public MainScreenComponents() {
 		super("Gracz vs gracz");
-		Container cp = getContentPane();
-		cp.setLayout(new BorderLayout());
+		conP = getContentPane();
+		conP.setLayout(new BorderLayout());
 		JPanel p = new JPanel();
 		p.setLayout(new GridLayout(1, 2));
 		p.add(startButton);
 		p.add(quitButton);
-		cp.add(gamePanel, BorderLayout.CENTER);
-		cp.add(p, BorderLayout.SOUTH);
+		conP.add(gamePanel, BorderLayout.CENTER);
+		conP.add(p, BorderLayout.SOUTH);
 		setSize(800, 600);
 
 		gamePanel.addMouseListener(mouseL);
@@ -361,6 +364,7 @@ public class MainScreenComponents extends JFrame implements ActionListener {
 			centerX = 400;
 			centerY = 250;
 			last = p = MouseInfo.getPointerInfo().getLocation();
+			//last.x = p.y = MouseInfo.getPointerInfo().getLocation().y - super.getLocationOnScreen().y;
 		}
 
 		public void setInterpolation(float interp) {
@@ -369,7 +373,8 @@ public class MainScreenComponents extends JFrame implements ActionListener {
 
 		public void update() {
 
-			p = MouseInfo.getPointerInfo().getLocation();
+			p.x =  MouseInfo.getPointerInfo().getLocation().x - conP.getLocationOnScreen().x;
+			p.y =  MouseInfo.getPointerInfo().getLocation().y - conP.getLocationOnScreen().y;
 		}
 
 		public void paintComponent(Graphics g) {
@@ -460,9 +465,9 @@ public class MainScreenComponents extends JFrame implements ActionListener {
 				last = p;
 			}
 			g.setColor(Color.black);
-			g.drawString("Pozycja myszy: " + (p.x - 285) + " " + (p.y - 105), 600, 10);
+			g.drawString("Pozycja myszy: " + (p.x ) + " " + (p.y), 600, 10);
 
-			double theta = Math.atan2(p.x - (285 + centerX), p.y - (105 + centerY));
+			double theta = Math.atan2(p.x - (centerX), p.y - (centerY));
 			theta += Math.PI / 2.0;
 			angle = Math.toDegrees(theta);
 
