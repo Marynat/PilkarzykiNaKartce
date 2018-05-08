@@ -382,9 +382,9 @@ public class MainScreenComponents extends JFrame implements ActionListener {
 			g.setColor(Color.black);
 
 			if (checkPlayer(playerOne)) {
-				g.drawString("Ruch gracza pierwszego", 300, 500);
+				g.drawString("Ruch gracza pierwszego", 320, 520);
 			} else
-				g.drawString("Ruch gracza drugiego", 300, 500);
+				g.drawString("Ruch gracza drugiego", 320, 520);
 
 			for (int i = 0; i < 9; ++i) { //vertical lines
 				g.setColor(Color.BLACK);
