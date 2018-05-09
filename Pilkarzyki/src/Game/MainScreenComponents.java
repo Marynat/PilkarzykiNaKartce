@@ -39,6 +39,8 @@ public class MainScreenComponents extends JFrame implements ActionListener {
 	private Player playerTwo = new Player(false);
 	private VisitedList visitedList = new VisitedList();
 	
+	eazyAI eazy = new eazyAI();
+	
 	Container conP;
 
 	Point nowy = new Point();
@@ -46,7 +48,7 @@ public class MainScreenComponents extends JFrame implements ActionListener {
 
 	boolean canI = true;
 	boolean canI2 = true;
-	boolean canI3 = true;
+	boolean canI3 = false;
 
 	void initiatePoints() {
 		for (int i = 0; i < 9; i++) {
@@ -184,6 +186,7 @@ public class MainScreenComponents extends JFrame implements ActionListener {
 
 			} else {
 				System.out.println(canI + " " + canI2);
+				System.out.println("nie da sie");
 				move.setNext(centerX, centerY);
 			}
 
@@ -193,6 +196,8 @@ public class MainScreenComponents extends JFrame implements ActionListener {
 				playerOne.moves.add(move);
 			} else
 				playerTwo.moves.add(move);
+			
+			System.out.println(eazy.move());
 		}
 
 		@Override
@@ -387,9 +392,9 @@ public class MainScreenComponents extends JFrame implements ActionListener {
 			g.setColor(Color.black);
 
 			if (checkPlayer(playerOne)) {
-				g.drawString("Ruch gracza pierwszego", 320, 520);
+				g.drawString("Ruch gracza 1", 320, 520);
 			} else
-				g.drawString("Ruch gracza drugiego", 320, 520);
+				g.drawString("Ruch gracza 2", 320, 520);
 
 			for (int i = 0; i < 9; ++i) { //vertical lines
 				g.setColor(Color.BLACK);
