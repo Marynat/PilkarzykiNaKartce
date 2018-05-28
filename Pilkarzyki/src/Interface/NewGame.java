@@ -7,13 +7,16 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 
-import Game.MainScreenComponents;
+import Game.Pvp;
 import Game.MainScreenFrame;
+import Game.Pvee;
+import Game.Pveh;
 
 public class NewGame extends JFrame{
 
 	JButton pvp = new JButton("Gracz vs Gracz");
-	JButton pve = new JButton("Gracz vs Komputer (£atwy)");
+	JButton pvee = new JButton("Gracz vs Komputer (latwy)");
+	JButton pveh = new JButton("Gracz vs Komputer (trudny)");
 	JButton back = new JButton("Wstecz");
 
 	public NewGame() {
@@ -23,28 +26,43 @@ public class NewGame extends JFrame{
 		pvp.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				dispose();
-				MainScreenComponents comp = new MainScreenComponents();
+				Pvp comp = new Pvp();
 				comp.setVisible(true);
 			}
 		});
 		add(pvp);
 
-		pve.setBounds(300, 90, 200, 30);
-		pve.setBackground(Color.YELLOW);
-		pve.setForeground(Color.BLUE);
-		pve.addActionListener(new ActionListener() {
+		pvee.setBounds(300, 90, 200, 30);
+		pvee.setBackground(Color.YELLOW);
+		pvee.setForeground(Color.BLUE);
+		pvee.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				dispose();
+				Pvee comp2 = new Pvee();
+				comp2.setVisible(true);
 			}
 		});
-		add(pve);
+		add(pvee);
 
-		back.setBounds(300, 140, 200, 30);
+		pveh.setBounds(300, 140, 200, 30);
+		pveh.setBackground(Color.YELLOW);
+		pveh.setForeground(Color.BLUE);
+		pveh.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+				Pveh comp3 = new Pveh();
+				comp3.setVisible(true);
+			}
+		});
+		add(pveh);
+
+		back.setBounds(300, 190, 200, 30);
 		back.setBackground(Color.YELLOW);
 		back.setForeground(Color.BLUE);
 		back.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				dispose();
-				new MainMenu(800, 600);
+				new MainMenu(800,600);
 			}
 		});
 		add(back);

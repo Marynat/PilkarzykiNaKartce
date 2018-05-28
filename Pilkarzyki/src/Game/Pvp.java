@@ -24,36 +24,35 @@ import javax.swing.Timer;
 
 import Interface.WinningScreen;
 
-public class MainScreenComponents extends JFrame implements ActionListener {
+public class Pvp extends JFrame implements ActionListener {
 
-	private GamePanel gamePanel = new GamePanel();
-	private JButton startButton = new JButton("Start");
+	private GamePanel gamePanel = new GamePanel();		//obiekt klasy game panel
+	private JButton startButton = new JButton("Start");	//przyciski
 	private JButton quitButton = new JButton("Quit");
-	private boolean running = false;
+	private boolean running = false;	//zmienne do dzialania i zatrzymywania gry
 	private boolean paused = false;
-	double centerX;
+	double centerX;	//zmienne srodka gry
 	double centerY;
-	double angle;
-	String direction;
-	private Player playerOne = new Player(true);
-	private Player playerTwo = new Player(false);
-	private VisitedList visitedList = new VisitedList();
-	
-	eazyAI eazy = new eazyAI();
-	
-	Container conP;
+	double angle;	//zmiena sluzoacz do obliczania kata
+	String direction;	// zmienna sluzaca do okreslania kierunku nastepnego ruchu
+	private Player playerOne = new Player(true); //obiekt gracza nr1
+	private Player playerTwo = new Player(false); //obiekt gracza nr 2
+	private VisitedList visitedList = new VisitedList(); //lista punktów odwiedzonych
 
-	Point nowy = new Point();
-	VisitedPoints visit = new VisitedPoints();
+	
+	Container conP;	// contener do ktorego dodajemy komponenty ekranu (przyciski i gamepanel)
 
-	boolean canI = true;
+	Point nowy = new Point(); // obiekt punktu dla nowego punktu
+	VisitedPoints visit = new VisitedPoints(); //obiekt dla punktu odwiedzonego
+
+	boolean canI = true; //zmienne do sprawdzania czy ruch jest mozliwy
 	boolean canI2 = true;
 	boolean canI3 = false;
 
 	void initiatePoints() {
 		for (int i = 0; i < 9; i++) {
 			for (int j = 0; j < 11; j++) {
-				int x = 240 + (i*40);
+				int x = 240 + (i*40);				//inicializacja punktow odwiedzonych
 				int y = 50 + (j*40);
 				if (x == 240 || x == 560 || y == 50 || y == 450) {
 					visit.setHasBeenVisited(true);
@@ -69,7 +68,7 @@ public class MainScreenComponents extends JFrame implements ActionListener {
 	void clearPoints(){
 		for (Iterator<VisitedPoints> it3 = visitedList.visited.iterator(); it3.hasNext();) {
 			visit = it3.next();
-				if (visit.vis.x == 240 || visit.vis.x == 560 || visit.vis.y == 50 || visit.vis.y == 450) {
+				if (visit.vis.x == 240 || visit.vis.x == 560 || visit.vis.y == 50 || visit.vis.y == 450) {	// wyczyszczenie listy punktow odwiedzonych
 					visit.setHasBeenVisited(true);
 				}else {
 					visit.setHasBeenVisited(false);
@@ -78,14 +77,14 @@ public class MainScreenComponents extends JFrame implements ActionListener {
 	}
 
 	void switchPlayers() {
-		playerOne.myMove = playerTwo.myMove;
+		playerOne.myMove = playerTwo.myMove;	//zmiana gracza
 		playerTwo.myMove = !playerTwo.myMove;
 
 	}
 	
 	int checkWinner() {
 		if(centerX >= 360 && centerX <= 440) {
-			if (centerY == 10) {
+			if (centerY == 10) {		//sprawdzanie zwyciezcy
 				return 1;
 			}else if (centerY == 490) {
 				return 2;
@@ -197,7 +196,6 @@ public class MainScreenComponents extends JFrame implements ActionListener {
 			} else
 				playerTwo.moves.add(move);
 			
-			System.out.println(eazy.move());
 		}
 
 		@Override
@@ -227,7 +225,7 @@ public class MainScreenComponents extends JFrame implements ActionListener {
 	private int fps = 60;
 	private int frameCount = 0;
 
-	public MainScreenComponents() {
+	public Pvp() {
 		super("Gracz vs gracz");
 		conP = getContentPane();
 		conP.setLayout(new BorderLayout());
@@ -368,8 +366,7 @@ public class MainScreenComponents extends JFrame implements ActionListener {
 		public GamePanel() {
 			centerX = 400;
 			centerY = 250;
-			last = p = MouseInfo.getPointerInfo().getLocation();
-			//last.x = p.y = MouseInfo.getPointerInfo().getLocation().y - super.getLocationOnScreen().y;
+			last = p = MouseInfo.getPointerInfo().getLocation();	// pobieranie pierwszego punktu myszy
 		}
 
 		public void setInterpolation(float interp) {
@@ -378,14 +375,13 @@ public class MainScreenComponents extends JFrame implements ActionListener {
 
 		public void update() {
 
-			p.x =  MouseInfo.getPointerInfo().getLocation().x - conP.getLocationOnScreen().x;
+			p.x =  MouseInfo.getPointerInfo().getLocation().x - conP.getLocationOnScreen().x; //pobranie punktu myszy z obliczniem od rozmiaru i pozycji okna
 			p.y =  MouseInfo.getPointerInfo().getLocation().y - conP.getLocationOnScreen().y;
 		}
 
 		public void paintComponent(Graphics g) {
-			// BS way of clearing out the old map to save CPU.
+			// czyszczenie starego okna
 			g.setColor(getBackground());
-			// g.fillRect(lastDrawX - 1, lastDrawY - 1, ballWidth + 2, ballHeight + 2);
 			g.setColor(Color.WHITE);
 			g.fillRect(0, 0, 800, 600);
 
@@ -430,7 +426,7 @@ public class MainScreenComponents extends JFrame implements ActionListener {
 
 			g.drawLine(360, 10 + 1, 440, 10 + 1);
 			g.drawLine(360 + 1, 10, 360 + 1, 50);
-			g.drawLine(440 + 1, 10, 440 + 1, 50);
+			g.drawLine(440 + 1, 10, 440 + 1, 50); //
 
 			// lower goal post
 			g.drawLine(360, 490, 440, 490);
@@ -443,7 +439,7 @@ public class MainScreenComponents extends JFrame implements ActionListener {
 			
 			g.drawLine(360, 490+1, 440, 490+1);
 			g.drawLine(360+1, 490, 360+1, 450);
-			g.drawLine(440+1, 490, 440+1, 450);
+			g.drawLine(440+1, 490, 440+1, 450); //
 			
 			// drawing of visited lines of player one
 			Iterator<Move> it;
@@ -463,22 +459,20 @@ public class MainScreenComponents extends JFrame implements ActionListener {
 
 			}
 
-			// lastDrawX = drawX;
-			// lastDrawY = drawY;
 
-			if (p.x != last.x || p.y != last.y) {
+			if (p.x != last.x || p.y != last.y) {								//
 				last = p;
 			}
 			g.setColor(Color.black);
 			g.drawString("Pozycja myszy: " + (p.x ) + " " + (p.y), 600, 10);
 
-			double theta = Math.atan2(p.x - (centerX), p.y - (centerY));
+			double theta = Math.atan2(p.x - (centerX), p.y - (centerY));		// obliczanie kata z lini prostej od srodka do pozycji myszki
 			theta += Math.PI / 2.0;
 			angle = Math.toDegrees(theta);
 
 			if (angle < 0) {
 				angle += 360;
-			}
+			}																	//
 
 			direction = new String("");
 
@@ -522,7 +516,7 @@ public class MainScreenComponents extends JFrame implements ActionListener {
 				if ((centerX != 240 && centerY != 50) || (centerX == 400 && centerY == 50) || (centerX == 440 && centerY == 50)) {
 					g.drawLine((int) centerX, (int) centerY, (int) centerX - 40, (int) centerY - 40);
 					direction = "NW";
-				}
+				} 			// przypisywanie odpowiedniego kierunku dla odpowiedniego kata
 			}
 
 			g.setColor(Color.BLACK);
@@ -532,15 +526,11 @@ public class MainScreenComponents extends JFrame implements ActionListener {
 			g.setColor(Color.WHITE);
 			if(checkWinner() == 1) {
 				running = false;
-				//playerOne.moves.clear();
-				//playerTwo.moves.clear();
 				clearPoints();
 				dispose();
 				new WinningScreen(400, 200, "jeden.");
 			}else if(checkWinner()== 2) {
 				running = false;
-				//playerOne.moves.clear();
-				//playerTwo.moves.clear();
 				clearPoints();
 				dispose();
 				new WinningScreen(400, 200, "dwa.");
@@ -551,7 +541,7 @@ public class MainScreenComponents extends JFrame implements ActionListener {
 	}
 
 	Boolean checkPlayer(Player p) {
-		if (p.myMove.equals(true))
+		if (p.myMove.equals(true)) 		//sprawdzenie czyj jest ruch
 			return true;
 		return false;
 	}
