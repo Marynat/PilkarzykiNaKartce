@@ -56,10 +56,13 @@ public class Pvee extends JFrame implements ActionListener {
 				int y = 50 + (j*40);
 				if (x == 240 || x == 560 || y == 50 || y == 450 || (x == 400 && y == 250)) {
 					visit.setHasBeenVisited(true);
-				}else if((x == 240 && y == 250) || (x == 560) && y == 250)
+				}
+				if((x == 400 && y == 50) || (x == 400 && y == 450)) {
+					//System.out.println("czy ja tu jestem??");
 					visit.setHasBeenVisited(false);
+				}
 				visit.setVis(x, y);
-				System.out.print(visit.vis + "; ");
+				//System.out.print(visit.vis + "; ");
 				visitedList.visited.add(visit);
 				visit = new VisitedPoints();
 			}
@@ -404,7 +407,7 @@ public class Pvee extends JFrame implements ActionListener {
 				//playerTwo.moves.clear();
 				clearPoints();
 				dispose();
-				new WinningScreen(400, 200, "Gracz nr jeden.");
+				new WinningScreen(400, 200, "Wygral Gracz.");
 			}else if(checkWinner()== 2) {
 				running = false;
 				//playerOne.moves.clear();
@@ -549,6 +552,12 @@ public class Pvee extends JFrame implements ActionListener {
 			}
 			
 			if(!checkPlayer(playerOne)) {
+//				try {
+//					Thread.sleep(400);
+//				} catch (InterruptedException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
 				direction = aie.move();
 				System.out.println(direction + "  !!!i am CPU!!!");
 				Move move = new Move();

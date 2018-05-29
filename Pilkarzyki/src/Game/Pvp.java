@@ -56,10 +56,13 @@ public class Pvp extends JFrame implements ActionListener {
 				int y = 50 + (j*40);
 				if (x == 240 || x == 560 || y == 50 || y == 450 || (x == 400 && y == 250)) {
 					visit.setHasBeenVisited(true);
-				}else if((x == 400 && y == 50) || (x == 400 && y == 450))
+				}
+				if((x == 400 && y == 50) || (x == 400 && y == 450)){
+					System.out.println("czy ja tu jestem??");
 					visit.setHasBeenVisited(false);
+				}
 				visit.setVis(x, y);
-				System.out.print(visit.vis + "; ");
+				System.out.println(visit.vis + "; ");
 				visitedList.visited.add(visit);
 				visit = new VisitedPoints();
 			}
