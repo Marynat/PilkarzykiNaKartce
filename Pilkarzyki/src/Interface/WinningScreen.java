@@ -18,7 +18,7 @@ public class WinningScreen extends JFrame {
     
     public WinningScreen(int WIDTH, int HEIGHT, String win ) {
     	
-    	winn = "Gratulacje!! Wygral‚ gracz nr " + win;
+    	winn = win + " Gratulacje!!";
     	
     	System.out.println(winn);
     	

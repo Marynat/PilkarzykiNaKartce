@@ -4,7 +4,7 @@ import java.awt.Point;
 
 public class VisitedPoints {
 	Point vis = new Point();
-	boolean hasBeenVisited = false;
+	boolean hasBeenVisited = false;  //standardowo false - true, pole jest zajete
 	
 	public void setVis(int x, int y) {
 		vis.x = x;

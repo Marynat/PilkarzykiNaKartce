@@ -37,7 +37,7 @@ public class Pvp extends JFrame implements ActionListener {
 	String direction;	// zmienna sluzaca do okreslania kierunku nastepnego ruchu
 	private Player playerOne = new Player(true); //obiekt gracza nr1
 	private Player playerTwo = new Player(false); //obiekt gracza nr 2
-	private VisitedList visitedList = new VisitedList(); //lista punktów odwiedzonych
+	private VisitedList visitedList = new VisitedList(); //lista punktï¿½w odwiedzonych
 
 	
 	Container conP;	// contener do ktorego dodajemy komponenty ekranu (przyciski i gamepanel)
@@ -54,9 +54,10 @@ public class Pvp extends JFrame implements ActionListener {
 			for (int j = 0; j < 11; j++) {
 				int x = 240 + (i*40);				//inicializacja punktow odwiedzonych
 				int y = 50 + (j*40);
-				if (x == 240 || x == 560 || y == 50 || y == 450) {
+				if (x == 240 || x == 560 || y == 50 || y == 450 || (x == 400 && y == 250)) {
 					visit.setHasBeenVisited(true);
-				}
+				}else if((x == 400 && y == 50) || (x == 400 && y == 450))
+					visit.setHasBeenVisited(false);
 				visit.setVis(x, y);
 				System.out.print(visit.vis + "; ");
 				visitedList.visited.add(visit);
@@ -165,11 +166,11 @@ public class Pvp extends JFrame implements ActionListener {
 
 				for (Iterator<VisitedPoints> it2 = visitedList.visited.iterator(); it2.hasNext();) {
 					visit = it2.next();
-					//System.out.println(visit.vis + " " + visit.hasBeenVisited);
-					if (centerX == visit.vis.x && centerY == visit.vis.y && visit.hasBeenVisited) {
+					if(visit.hasBeenVisited == true)System.out.println(visit.vis + " " + visit.hasBeenVisited);
+					if (nowy.x == visit.vis.x && nowy.y == visit.vis.y && visit.hasBeenVisited) {
 						canI3 = false;
 						break;
-					}else if(centerX == visit.vis.x && centerY == visit.vis.y && !visit.hasBeenVisited) {
+					}else if(nowy.x == visit.vis.x && nowy.y == visit.vis.y && !visit.hasBeenVisited) {
 						visit.setHasBeenVisited(true);
 					}
 					else {
@@ -177,11 +178,18 @@ public class Pvp extends JFrame implements ActionListener {
 
 					}
 				}
-				if (canI3)
-					switchPlayers();
 
 				centerX = nowy.x;
 				centerY = nowy.y;
+				
+				System.out.println("prev x: " + move.prev.x + " prev y: " + move.prev.y + " next x: " + move.next.x
+						+ " next y: " + move.next.y);
+				if (checkPlayer(playerOne)) {
+					playerOne.moves.add(move);
+				} else
+					playerTwo.moves.add(move);
+				if (canI3)
+					switchPlayers();
 
 			} else {
 				System.out.println(canI + " " + canI2);
@@ -189,13 +197,6 @@ public class Pvp extends JFrame implements ActionListener {
 				move.setNext(centerX, centerY);
 			}
 
-			System.out.println("prev x: " + move.prev.x + " prev y: " + move.prev.y + " next x: " + move.next.x
-					+ " next y: " + move.next.y);
-			if (checkPlayer(playerOne)) {
-				playerOne.moves.add(move);
-			} else
-				playerTwo.moves.add(move);
-			
 		}
 
 		@Override
@@ -528,12 +529,12 @@ public class Pvp extends JFrame implements ActionListener {
 				running = false;
 				clearPoints();
 				dispose();
-				new WinningScreen(400, 200, "jeden.");
+				new WinningScreen(400, 200, "Wygral gracz nr. jeden.");
 			}else if(checkWinner()== 2) {
 				running = false;
 				clearPoints();
 				dispose();
-				new WinningScreen(400, 200, "dwa.");
+				new WinningScreen(400, 200, "WygraÅ‚ gracz nr. dwa.");
 			}
 
 			frameCount++;
