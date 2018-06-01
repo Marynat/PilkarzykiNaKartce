@@ -77,6 +77,10 @@ public class Pvp extends JFrame implements ActionListener {
 				}else {
 					visit.setHasBeenVisited(false);
 			}
+				if((visit.vis.x == 400 && visit.vis.y == 50) || (visit.vis.x == 400 && visit.vis.y == 450)) {
+					//System.out.println("czy ja tu jestem??");
+					visit.setHasBeenVisited(false);
+				}
 		}
 	}
 

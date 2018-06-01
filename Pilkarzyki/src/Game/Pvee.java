@@ -83,6 +83,10 @@ public class Pvee extends JFrame implements ActionListener {
 				}else {
 					visit.setHasBeenVisited(false);
 			}
+				if((visit.vis.x == 400 && visit.vis.y == 50) || (visit.vis.x == 400 && visit.vis.y == 450)) {
+					//System.out.println("czy ja tu jestem??");
+					visit.setHasBeenVisited(false);
+				}
 		}
 	}
 
@@ -420,7 +424,7 @@ public class Pvee extends JFrame implements ActionListener {
 			if (checkPlayer(playerOne)) {
 				g.drawString("Ruch gracza 1", 320, 520);
 			} else
-				g.drawString("Ruch gracza 2", 320, 520);
+				g.drawString("Ruch komputera", 320, 520);
 
 			for (int i = 0; i < 9; ++i) { //vertical lines
 				g.setColor(Color.BLACK);
@@ -558,7 +562,7 @@ public class Pvee extends JFrame implements ActionListener {
 //					// TODO Auto-generated catch block
 //					e.printStackTrace();
 //				}
-				direction = aie.move();
+				direction = aie.chooseMove();
 				System.out.println(direction + "  !!!i am CPU!!!");
 				Move move = new Move();
 				move.setPrev(centerX, centerY);
@@ -567,31 +571,71 @@ public class Pvee extends JFrame implements ActionListener {
 					System.out.println("Nie da sie wykonac ruchu");
 					move.setNext(centerX, centerY);
 				} else if (direction.equals("N")) {
-					nowy.y -= 40;
+					if ((centerX != 240 && centerX != 560 && centerY != 50) || (centerX == 400 && centerY == 50)) {
+						nowy.y -= 40;
+					}else {
+						System.out.println("NIE WOLNO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+						canI3 = false;
+					}
 				} else if (direction.equals("NE")) {
-					nowy.x += 40;
-					nowy.y -= 40;
+					if ((centerX != 560 && centerY != 50) || (centerX == 400 && centerY == 50) || (centerX == 360 && centerY == 50)) {
+							nowy.x += 40;
+							nowy.y -= 40;
+						}else {
+							System.out.println("NIE WOLNO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+							canI3 = false;
+					}
 					move.setNext(centerX, centerY);
 				} else if (direction.equals("E")) {
-					nowy.x += 40;
+					if ((centerX != 560 && centerY != 50 && centerY != 450) || (centerX == 400 && centerY == 50) || (centerX == 360 && centerY == 50) || (centerX == 360 && centerY == 450) || (centerX == 400 && centerY == 450)) {
+						nowy.x += 40;
+						}else {
+							System.out.println("NIE WOLNO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+							canI3 = false;
+						}
 					move.setNext(centerX, centerY);
 				} else if (direction.equals("SE")) {
-					nowy.x += 40;
-					nowy.y += 40;
+					if ((centerX != 560 && centerY != 450) || (centerX == 400 && centerY == 450) || (centerX == 360 && centerY == 450)) {
+						nowy.x += 40;
+						nowy.y += 40;
+					}else {
+						System.out.println("NIE WOLNO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+						canI3 = false;
+					}
 					move.setNext(centerX, centerY);
 				} else if (direction.equals("S")) {
-					nowy.y += 40;
+					if ((centerX != 240 && centerX != 560 && centerY != 450) || (centerX == 400 && centerY == 450)) {
+						nowy.y += 40;
+					}else {
+						System.out.println("NIE WOLNO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+						canI3 = false;
+					}
 					move.setNext(centerX, centerY);
 				} else if (direction.equals("SW")) {
-					nowy.x -= 40;
-					nowy.y += 40;
+					if ((centerX != 240 && centerY != 450) || (centerX == 400 && centerY == 450) || (centerX == 440 && centerY == 450)) {
+						nowy.x -= 40;
+						nowy.y += 40;
+					}else {
+						System.out.println("NIE WOLNO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+						canI3 = false;
+					}
 					move.setNext(centerX, centerY);
 				} else if (direction.equals("W")) {
-					nowy.x -= 40;
+					if ((centerX != 240 && centerY != 50 && centerY != 450) || (centerX == 400 && centerY == 50) || (centerX == 440 && centerY == 50) || (centerX == 440 && centerY == 450) || (centerX == 400 && centerY == 450)) {
+						nowy.x -= 40;						
+					}else {
+						System.out.println("NIE WOLNO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+						canI3 = false;
+					}
 					move.setNext(centerX, centerY);
 				} else if (direction.equals("NW")) {
-					nowy.x -= 40;
-					nowy.y -= 40;
+					if ((centerX != 240 && centerY != 50) || (centerX == 400 && centerY == 50) || (centerX == 440 && centerY == 50)) {
+						nowy.x -= 40;
+						nowy.y -= 40;
+					}else {
+						System.out.println("NIE WOLNO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+						canI3 = false;
+					}
 					move.setNext(centerX, centerY);
 				}
 				for (Iterator<Move> it1 = playerOne.moves.iterator(); it1.hasNext();) {

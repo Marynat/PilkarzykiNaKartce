@@ -195,7 +195,7 @@ public class Pveh extends JFrame implements ActionListener {
 			} else
 				aie.moves.add(move);
 			
-			System.out.println(eazy.move());
+			System.out.println(eazy.chooseMove());
 		}
 
 		@Override
