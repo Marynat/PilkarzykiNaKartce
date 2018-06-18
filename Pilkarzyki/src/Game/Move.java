@@ -7,6 +7,18 @@ public class Move {
 
 	Point.Double prev = new Point.Double();
 	Point.Double next = new Point.Double();
+	
+	int punkty;
+	
+	
+
+	public int getPunkty() {
+		return punkty;
+	}
+
+	public void setPunkty(int punkty) {
+		this.punkty = punkty;
+	}
 
 	public Double getPrev() {
 		return prev;

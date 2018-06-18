@@ -36,10 +36,9 @@ public class Pveh extends JFrame implements ActionListener {
 	double angle;
 	String direction;
 	private Player playerOne = new Player(true);
-	private eazyAI aie = new eazyAI();
+	private hardAi aih = new hardAi();
 	private VisitedList visitedList = new VisitedList();
 	
-	eazyAI eazy = new eazyAI();
 	
 	Container conP;
 
@@ -55,15 +54,25 @@ public class Pveh extends JFrame implements ActionListener {
 			for (int j = 0; j < 11; j++) {
 				int x = 240 + (i*40);
 				int y = 50 + (j*40);
-				if (x == 240 || x == 560 || y == 50 || y == 450) {
+				if (x == 240 || x == 560 || y == 50 || y == 450 || (x == 400 && y == 250)) {
 					visit.setHasBeenVisited(true);
 				}
+				if((x == 400 && y == 50) || (x == 400 && y == 450)) {
+					//System.out.println("czy ja tu jestem??");
+					visit.setHasBeenVisited(false);
+				}
 				visit.setVis(x, y);
-				System.out.print(visit.vis + "; ");
+				//System.out.print(visit.vis + "; ");
 				visitedList.visited.add(visit);
 				visit = new VisitedPoints();
 			}
 		}
+	}
+	
+	Boolean checkPlayer(Player p) {
+		if (p.myMove.equals(true))
+			return true;
+		return false;
 	}
 	
 	void clearPoints(){
@@ -74,6 +83,10 @@ public class Pveh extends JFrame implements ActionListener {
 				}else {
 					visit.setHasBeenVisited(false);
 			}
+				if((visit.vis.x == 400 && visit.vis.y == 50) || (visit.vis.x == 400 && visit.vis.y == 450)) {
+					//System.out.println("czy ja tu jestem??");
+					visit.setHasBeenVisited(false);
+				}
 		}
 	}
 
@@ -147,7 +160,7 @@ public class Pveh extends JFrame implements ActionListener {
 				}
 			}
 
-			for (Iterator<Move> it = aie.moves.iterator(); it.hasNext();) {
+			for (Iterator<Move> it = aih.moves.iterator(); it.hasNext();) {
 				mov = it.next();
 				if ((centerX == mov.prev.x && centerY == mov.prev.y && nowy.x == mov.next.x && nowy.y == mov.next.y)
 						|| (centerX == mov.next.x && centerY == mov.next.y && nowy.x == mov.prev.x
@@ -165,37 +178,40 @@ public class Pveh extends JFrame implements ActionListener {
 				for (Iterator<VisitedPoints> it2 = visitedList.visited.iterator(); it2.hasNext();) {
 					visit = it2.next();
 					//System.out.println(visit.vis + " " + visit.hasBeenVisited);
-					if (centerX == visit.vis.x && centerY == visit.vis.y && visit.hasBeenVisited) {
+					if (nowy.x == visit.vis.x && nowy.y == visit.vis.y && visit.hasBeenVisited) {
 						canI3 = false;
 						break;
-					}else if(centerX == visit.vis.x && centerY == visit.vis.y && !visit.hasBeenVisited) {
+					}else if(nowy.x == visit.vis.x && nowy.y == visit.vis.y && !visit.hasBeenVisited) {
 						visit.setHasBeenVisited(true);
 					}
 					else {
 						canI3 = true;
 
 					}
+					
+					
 				}
-				if (canI3)
-					switchPlayers();
 
+				
 				centerX = nowy.x;
 				centerY = nowy.y;
+				
+				System.out.println("prev x: " + move.prev.x + " prev y: " + move.prev.y + " next x: " + move.next.x
+						+ " next y: " + move.next.y);
+				if (checkPlayer(playerOne)) {
+					playerOne.moves.add(move);
+				} else
+					aih.moves.add(move);
+				
+				if (canI3)
+					switchPlayers();
 
 			} else {
 				System.out.println(canI + " " + canI2);
 				System.out.println("nie da sie");
 				move.setNext(centerX, centerY);
 			}
-
-			System.out.println("prev x: " + move.prev.x + " prev y: " + move.prev.y + " next x: " + move.next.x
-					+ " next y: " + move.next.y);
-			if (checkPlayer(playerOne)) {
-				playerOne.moves.add(move);
-			} else
-				aie.moves.add(move);
 			
-			System.out.println(eazy.chooseMove());
 		}
 
 		@Override
@@ -226,7 +242,7 @@ public class Pveh extends JFrame implements ActionListener {
 	private int frameCount = 0;
 
 	public Pveh() {
-		super("Gracz vs komputer (latwy)");
+		super("Gracz vs komputer (trudny)");
 		conP = getContentPane();
 		conP.setLayout(new BorderLayout());
 		JPanel p = new JPanel();
@@ -388,11 +404,27 @@ public class Pveh extends JFrame implements ActionListener {
 			g.fillRect(0, 0, 800, 600);
 
 			g.setColor(Color.black);
+			
+			if(checkWinner() == 1) {
+				running = false;
+				//playerOne.moves.clear();
+				//playerTwo.moves.clear();
+				clearPoints();
+				dispose();
+				new WinningScreen(400, 200, "Wygral Gracz.");
+			}else if(checkWinner()== 2) {
+				running = false;
+				//playerOne.moves.clear();
+				//playerTwo.moves.clear();
+				clearPoints();
+				dispose();
+				new WinningScreen(400, 200, "Wygrał Komputer.");
+			}
 
 			if (checkPlayer(playerOne)) {
 				g.drawString("Ruch gracza 1", 320, 520);
 			} else
-				g.drawString("Ruch gracza 2", 320, 520);
+				g.drawString("Ruch komputera", 320, 520);
 
 			for (int i = 0; i < 9; ++i) { //vertical lines
 				g.setColor(Color.BLACK);
@@ -455,7 +487,7 @@ public class Pveh extends JFrame implements ActionListener {
 
 			// drawing of visited lines of player two
 			g.setColor(Color.RED);
-			for (it = aie.moves.iterator(); it.hasNext();) {
+			for (it = aih.moves.iterator(); it.hasNext();) {
 				mov = it.next();
 				g.drawLine((int) mov.prev.x, (int) mov.prev.y, (int) mov.next.x, (int) mov.next.y);
 
@@ -522,35 +554,192 @@ public class Pveh extends JFrame implements ActionListener {
 					direction = "NW";
 				}
 			}
+			
+			if(!checkPlayer(playerOne)) {
+
+				//direction = aih.chooseMove();
+				System.out.println(direction + "  !!!i am CPU!!!");
+				Move move = new Move();
+				int points = 0;
+				for(int i = 0; i < 3 ; i ++) {
+					for(int j = 0; j < 8; j++) {
+						switch:
+							case j == 0 direction = "N"
+							case 1 direction = "NE"
+							case 2 direction = "NW"
+							case 3 direction = "E"
+							case 4 direction = "W"
+							case 5 direction = "SE"
+							case 6 direction = "SW"
+							case 7 direction = "S";
+						default direction = "";
+						
+						aih.domove(diretion, centerX, centerY);
+						//just a reminder: itssssssssssssssss stupid 4 fak sake ;/ why?
+						// has to be in recurent function ;/ fuck		 
+								 
+						
+						
+						
+					}
+					dodajDoLstyList();
+					
+					
+				}
+				move.setPrev(centerX, centerY);
+				System.out.println(move.prev);
+				if (direction.equals("")) {
+					System.out.println("Nie da sie wykonac ruchu");
+					move.setNext(centerX, centerY);
+				} else if (direction.equals("N")) {
+					if ((centerX != 240 && centerX != 560 && centerY != 50) || (centerX == 400 && centerY == 50)) {
+						nowy.y -= 40;
+						points = 5;
+					}else {
+						System.out.println("NIE WOLNO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+						canI3 = false;
+					}
+				} else if (direction.equals("NE")) {
+					if ((centerX != 560 && centerY != 50) || (centerX == 400 && centerY == 50) || (centerX == 360 && centerY == 50)) {
+							nowy.x += 40;
+							nowy.y -= 40;
+							points = 7;
+						}else {
+							System.out.println("NIE WOLNO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+							canI3 = false;
+					}
+					move.setNext(centerX, centerY);
+				} else if (direction.equals("E")) {
+					if ((centerX != 560 && centerY != 50 && centerY != 450) || (centerX == 400 && centerY == 50) || (centerX == 360 && centerY == 50) || (centerX == 360 && centerY == 450) || (centerX == 400 && centerY == 450)) {
+						nowy.x += 40;
+						points = 10;
+						}else {
+							System.out.println("NIE WOLNO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+							canI3 = false;
+						}
+					move.setNext(centerX, centerY);
+				} else if (direction.equals("SE")) {
+					if ((centerX != 560 && centerY != 450) || (centerX == 400 && centerY == 450) || (centerX == 360 && centerY == 450)) {
+						nowy.x += 40;
+						nowy.y += 40;
+						points = 15;
+					}else {
+						System.out.println("NIE WOLNO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+						canI3 = false;
+					}
+					move.setNext(centerX, centerY);
+				} else if (direction.equals("S")) {
+					if ((centerX != 240 && centerX != 560 && centerY != 450) || (centerX == 400 && centerY == 450)) {
+						nowy.y += 40;
+						points = 20;
+					}else {
+						System.out.println("NIE WOLNO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+						canI3 = false;
+					}
+					move.setNext(centerX, centerY);
+				} else if (direction.equals("SW")) {
+					if ((centerX != 240 && centerY != 450) || (centerX == 400 && centerY == 450) || (centerX == 440 && centerY == 450)) {
+						nowy.x -= 40;
+						nowy.y += 40;
+						points = 15;
+					}else {
+						System.out.println("NIE WOLNO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+						canI3 = false;
+					}
+					move.setNext(centerX, centerY);
+				} else if (direction.equals("W")) {
+					if ((centerX != 240 && centerY != 50 && centerY != 450) || (centerX == 400 && centerY == 50) || (centerX == 440 && centerY == 50) || (centerX == 440 && centerY == 450) || (centerX == 400 && centerY == 450)) {
+						nowy.x -= 40;
+						points = 10;
+					}else {
+						System.out.println("NIE WOLNO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+						canI3 = false;
+					}
+					move.setNext(centerX, centerY);
+				} else if (direction.equals("NW")) {
+					if ((centerX != 240 && centerY != 50) || (centerX == 400 && centerY == 50) || (centerX == 440 && centerY == 50)) {
+						nowy.x -= 40;
+						nowy.y -= 40;
+						points = 7;
+					}else {
+						System.out.println("NIE WOLNO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+						canI3 = false;
+					}
+					move.setNext(centerX, centerY);
+				}
+				for (Iterator<Move> it1 = playerOne.moves.iterator(); it1.hasNext();) {
+					mov = it1.next();
+					if ((centerX == mov.prev.x && centerY == mov.prev.y && nowy.x == mov.next.x && nowy.y == mov.next.y)
+							|| (centerX == mov.next.x && centerY == mov.next.y && nowy.x == mov.prev.x
+									&& nowy.y == mov.prev.y)) {
+						canI = false;
+						break;
+					} else {
+						canI = true;
+					}
+				}
+
+				for (Iterator<Move> it1 = aih.moves.iterator(); it1.hasNext();) {
+					mov = it1.next();
+					if ((centerX == mov.prev.x && centerY == mov.prev.y && nowy.x == mov.next.x && nowy.y == mov.next.y)
+							|| (centerX == mov.next.x && centerY == mov.next.y && nowy.x == mov.prev.x
+									&& nowy.y == mov.prev.y)) {
+						canI2 = false;
+						break;
+					} else {
+						canI2 = true;
+					}
+				}
+				if (canI && canI2) {
+					move.setNext(nowy.x, nowy.y);
+					System.out.println("da sie");
+
+					for (Iterator<VisitedPoints> it2 = visitedList.visited.iterator(); it2.hasNext();) {
+						visit = it2.next();
+						//System.out.println(visit.vis + " " + visit.hasBeenVisited);
+						if (nowy.x == visit.vis.x && nowy.y == visit.vis.y && visit.hasBeenVisited) {
+							canI3 = false;
+							break;
+						}else if(nowy.x == visit.vis.x && nowy.y == visit.vis.y && !visit.hasBeenVisited) {
+							visit.setHasBeenVisited(true);
+						}
+						else {
+							canI3 = true;
+
+						}
+					}
+
+					centerX = nowy.x;
+					centerY = nowy.y;
+					
+					System.out.println("prev x: " + move.prev.x + " prev y: " + move.prev.y + " next x: " + move.next.x
+							+ " next y: " + move.next.y);
+					if (checkPlayer(playerOne)) {
+						playerOne.moves.add(move);
+					} else
+						aih.moves.add(move);
+					
+					if (canI3)
+						switchPlayers();
+
+				} else {
+					System.out.println(canI + " " + canI2);
+					System.out.println("nie da sie");
+					move.setNext(centerX, centerY);
+					nowy.x = (int) centerX;
+					nowy.y = (int) centerY;
+				}
+
+				
+			}
 
 			g.setColor(Color.BLACK);
 			g.drawString("FPS: " + fps, 5, 10);
 
 			// g.clearRect(0, 0, 800, 500);
 			g.setColor(Color.WHITE);
-			if(checkWinner() == 1) {
-				running = false;
-				//playerOne.moves.clear();
-				//playerTwo.moves.clear();
-				clearPoints();
-				dispose();
-				new WinningScreen(400, 200, "jeden.");
-			}else if(checkWinner()== 2) {
-				running = false;
-				//playerOne.moves.clear();
-				//playerTwo.moves.clear();
-				clearPoints();
-				dispose();
-				new WinningScreen(400, 200, "dwa.");
-			}
 
 			frameCount++;
 		}
-	}
-
-	Boolean checkPlayer(Player p) {
-		if (p.myMove.equals(true))
-			return true;
-		return false;
 	}
 }
