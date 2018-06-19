@@ -50,10 +50,38 @@ public class Pvee extends JFrame implements ActionListener {
 	boolean canI3 = false;
 
 	void initiatePoints() {
+		
+		int x = 0;
+		int y = 0;
+		for (int i=0; i<2; i++) {
+			for(int j=0; j<13; j++) {
+				x = 10 +(j * 40) ;
+				y = 200 + (i * 530);
+				visit.setHasBeenVisited(true);
+				visit.setVis(x, y);
+				//System.out.print(visit.vis + "; ");
+				visitedList.visited.add(visit);
+				visit = new VisitedPoints();
+			}
+		}
+		for (int i=0; i<2; i++) {
+			for(int j=0; j<11; j++) {
+				x = 200 +(i * 400) ;
+				y = 10 + (j * 40);
+				visit.setHasBeenVisited(true);
+				visit.setVis(x, y);
+				//System.out.print(visit.vis + "; ");
+				visitedList.visited.add(visit);
+				visit = new VisitedPoints();
+			}
+		}
+		
+		
+		
 		for (int i = 0; i < 9; i++) {
 			for (int j = 0; j < 11; j++) {
-				int x = 240 + (i*40);
-				int y = 50 + (j*40);
+				x = 240 + (i*40);
+				y = 50 + (j*40);
 				if (x == 240 || x == 560 || y == 50 || y == 450 || (x == 400 && y == 250)) {
 					visit.setHasBeenVisited(true);
 				}
@@ -405,6 +433,8 @@ public class Pvee extends JFrame implements ActionListener {
 
 			g.setColor(Color.black);
 			
+			
+			
 			if(checkWinner() == 1) {
 				running = false;
 				//playerOne.moves.clear();
@@ -419,6 +449,15 @@ public class Pvee extends JFrame implements ActionListener {
 				clearPoints();
 				dispose();
 				new WinningScreen(400, 200, "Wygrał Komputer.");
+			}
+			
+			if(checkEnd()) {
+				running = false;
+				//playerOne.moves.clear();
+				//playerTwo.moves.clear();
+				clearPoints();
+				//dispose();
+				new WinningScreen(400, 200, "Remis!!!!! ");
 			}
 
 			if (checkPlayer(playerOne)) {
@@ -712,5 +751,75 @@ public class Pvee extends JFrame implements ActionListener {
 
 			frameCount++;
 		}
+	}
+	Boolean checkEnd() {
+		
+		Move mov = new Move();
+		mov.setPrev(centerX, centerY);
+		
+		Point end = new Point();
+		
+		end.x = (int) centerX;
+		end.y = (int) centerY;
+		int j;
+		for(j = 0; j < 8; j++) {
+			
+			//System.out.println(j);
+				if (j == 0) { end.y = (int)centerY - 40;
+				} 
+				if(j == 1) { 	end.x = (int)centerX + 40;
+							end.y = (int)centerY - 40;
+						}
+				if(j == 2) { 	end.x = (int)centerX + 40;
+						}
+				if(j == 3) { 	end.x = (int)centerX + 40;
+							end.y = (int)centerY + 40;
+						}
+				if(j == 4) {
+							end.y = (int)centerY + 40;
+						}
+				if(j == 5) { 	end.x = (int)centerX - 40;
+							end.y = (int)centerY + 40;
+						}
+				if(j == 6) { 	end.x = (int)centerX - 40;
+						}
+				if (j == 8) { 	end.x = (int)centerX - 40;
+							end.y = (int)centerY - 40;
+						}
+			
+			//System.out.println(centerX + " " + centerY);
+			//System.out.println(end);
+			
+			for (Iterator<Move> it = playerOne.moves.iterator(); it.hasNext();) {
+				mov = it.next();
+				if ((centerX == mov.prev.x && centerY == mov.prev.y && end.x == mov.next.x && end.y == mov.next.y)
+						|| (centerX == mov.next.x && centerY == mov.next.y && end.x == mov.prev.x
+								&& end.y == mov.prev.y)) {
+					canI = false;
+					break;
+				} else {
+					canI = true;
+					
+				}
+			}
+
+			for (Iterator<Move> it = aie.moves.iterator(); it.hasNext();) {
+				mov = it.next();
+				if ((centerX == mov.prev.x && centerY == mov.prev.y && end.x == mov.next.x && end.y == mov.next.y)
+						|| (centerX == mov.next.x && centerY == mov.next.y && end.x == mov.prev.x
+						&& end.y == mov.prev.y)) {
+					canI2 = false;
+					break;
+				} else {
+					canI2 = true;
+				}
+			}
+			if(canI && canI2) {
+				return false;
+			}
+			
+		}
+		
+		return true;
 	}
 }

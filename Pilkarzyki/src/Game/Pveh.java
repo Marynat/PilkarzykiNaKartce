@@ -563,18 +563,18 @@ public class Pveh extends JFrame implements ActionListener {
 				int points = 0;
 				for(int i = 0; i < 3 ; i ++) {
 					for(int j = 0; j < 8; j++) {
-						switch:
-							case j == 0 direction = "N"
-							case 1 direction = "NE"
-							case 2 direction = "NW"
-							case 3 direction = "E"
-							case 4 direction = "W"
-							case 5 direction = "SE"
-							case 6 direction = "SW"
-							case 7 direction = "S";
-						default direction = "";
+						switch (j) {
+							case 0: direction = "N";
+							case 1: direction = "NE";
+							case 2: direction = "NW";
+							case 3: direction = "E";
+							case 4: direction = "W";
+							case 5: direction = "SE";
+							case 6: direction = "SW";
+							case 7: direction = "S";
+						default: direction = "";
 						
-						aih.domove(diretion, centerX, centerY);
+						aih.domove(direction, centerX, centerY);
 						//just a reminder: itssssssssssssssss stupid 4 fak sake ;/ why?
 						// has to be in recurent function ;/ fuck		 
 								 
