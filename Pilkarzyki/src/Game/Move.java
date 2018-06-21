@@ -37,5 +37,14 @@ public class Move {
 		this.next.x = x;
 		this.next.y = y;
 	}
+	
+	public void setNext(Point nex) {
+		this.next.x = nex.getY();
+		this.next.y = nex.getX();
+	}
+	public void setPrev(Point pre) {
+		this.prev.x = pre.getY();
+		this.prev.y = pre.getX();
+	}
 
 }

@@ -37,9 +37,9 @@ public class Pvee extends JFrame implements ActionListener {
 	String direction;
 	private Player playerOne = new Player(true);
 	private eazyAI aie = new eazyAI();
+	private Player invisibleOne = new Player(false);
 	private VisitedList visitedList = new VisitedList();
-	
-	
+
 	Container conP;
 
 	Point nowy = new Point();
@@ -50,83 +50,154 @@ public class Pvee extends JFrame implements ActionListener {
 	boolean canI3 = false;
 
 	void initiatePoints() {
-		
+
 		int x = 0;
 		int y = 0;
-		for (int i=0; i<2; i++) {
-			for(int j=0; j<13; j++) {
-				x = 10 +(j * 40) ;
-				y = 200 + (i * 530);
-				visit.setHasBeenVisited(true);
-				visit.setVis(x, y);
-				//System.out.print(visit.vis + "; ");
-				visitedList.visited.add(visit);
-				visit = new VisitedPoints();
-			}
-		}
-		for (int i=0; i<2; i++) {
-			for(int j=0; j<11; j++) {
-				x = 200 +(i * 400) ;
+		for (int i = 0; i < 2; i++) {
+			for (int j = 0; j < 13; j++) {
+				x = 200 + (i * 400);
 				y = 10 + (j * 40);
 				visit.setHasBeenVisited(true);
 				visit.setVis(x, y);
-				//System.out.print(visit.vis + "; ");
+				// System.out.print(visit.vis + "; ");
+				visitedList.visited.add(visit);
+				visit = new VisitedPoints();
+				Move invis = new Move();
+				Point end = new Point();
+				invis.setPrev(x,y);
+				end.x = x;
+				end.y = y;
+				int k;
+				for (k = 0; k < 8; k++) {
+
+					// System.out.println(j);
+					if (k == 0) {
+						end.y = y - 40;
+					}
+					if (k == 1) {
+						end.x = (int) x + 40;
+						end.y = (int) y - 40;
+					}
+					if (k == 2) {
+						end.x = (int) x + 40;
+						end.y = (int) y;
+					}
+					if (k == 3) {
+						end.x = (int) x + 40;
+						end.y = (int) y + 40;
+					}
+					if (k == 4) {
+						end.x = (int) x;
+						end.y = (int) y + 40;
+					}
+					if (k == 5) {
+						end.x = (int) x - 40;
+						end.y = (int) y + 40;
+					}
+					if (k == 6) {
+						end.x = (int) x - 40;
+						end.y = (int) y;
+					}
+					if (k == 7) {
+						end.x = (int) x - 40;
+						end.y = (int) y - 40;
+					}
+					System.out.println(invis.prev);
+					System.out.println(end);
+					invis.setNext(end);
+					invisibleOne.moves.add(invis);
+				}
+				invis.setPrev(x+40,y);
+				end.x = x+40;
+				end.y = y;
+				for(int l = 0; l < 4; l++) {
+					if (l == 0) {
+						end.y = y-40;
+					}
+					if(l == 1) {
+						end.y = y+40;
+					}
+					if(l == 2) {
+						invis.setPrev(x-40,y);
+						end.x = x-40;
+						end.y = y-40;
+					}
+					if(l == 3) {
+						end.x = x-40;
+						end.y = y+40;
+					}
+					System.out.println(invis.prev);
+					System.out.println(end);
+					invis.setNext(end);
+					invisibleOne.moves.add(invis);
+				}
+				
+				
+				
+				
+			}
+		}
+		/*for (int i = 0; i < 2; i++) {
+			for (int j = 0; j < 11; j++) {
+				x = 200 + (i * 400);
+				y = 10 + (j * 40);
+				visit.setHasBeenVisited(true);
+				visit.setVis(x, y);
+				// System.out.print(visit.vis + "; ");
 				visitedList.visited.add(visit);
 				visit = new VisitedPoints();
 			}
-		}
-		
-		
-		
+		}*/
+
 		for (int i = 0; i < 9; i++) {
 			for (int j = 0; j < 11; j++) {
-				x = 240 + (i*40);
-				y = 50 + (j*40);
+				x = 240 + (i * 40);
+				y = 50 + (j * 40);
 				if (x == 240 || x == 560 || y == 50 || y == 450 || (x == 400 && y == 250)) {
 					visit.setHasBeenVisited(true);
 				}
-				if((x == 400 && y == 50) || (x == 400 && y == 450)) {
-					//System.out.println("czy ja tu jestem??");
+				if ((x == 400 && y == 50) || (x == 400 && y == 450)) {
+					// System.out.println("czy ja tu jestem??");
 					visit.setHasBeenVisited(false);
 				}
 				visit.setVis(x, y);
-				//System.out.print(visit.vis + "; ");
+				// System.out.print(visit.vis + "; ");
 				visitedList.visited.add(visit);
 				visit = new VisitedPoints();
 			}
 		}
 	}
-	
+
 	Boolean checkPlayer(Player p) {
 		if (p.myMove.equals(true))
 			return true;
 		return false;
 	}
-	
-	void clearPoints(){
+
+	void clearPoints() {
 		for (Iterator<VisitedPoints> it3 = visitedList.visited.iterator(); it3.hasNext();) {
 			visit = it3.next();
-				if (visit.vis.x == 240 || visit.vis.x == 560 || visit.vis.y == 50 || visit.vis.y == 450) {
-					visit.setHasBeenVisited(true);
-				}else {
-					visit.setHasBeenVisited(false);
+			if (visit.vis.x == 240 || visit.vis.x == 560 || visit.vis.y == 50 || visit.vis.y == 450) {
+				visit.setHasBeenVisited(true);
+			} else {
+				visit.setHasBeenVisited(false);
 			}
-				if((visit.vis.x == 400 && visit.vis.y == 50) || (visit.vis.x == 400 && visit.vis.y == 450)) {
-					//System.out.println("czy ja tu jestem??");
-					visit.setHasBeenVisited(false);
-				}
+			if ((visit.vis.x == 400 && visit.vis.y == 50) || (visit.vis.x == 400 && visit.vis.y == 450)) {
+				// System.out.println("czy ja tu jestem??");
+				visit.setHasBeenVisited(false);
+			}
 		}
 	}
 
 	void switchPlayers() {
 		playerOne.myMove = !playerOne.myMove;
 	}
-	
+
 	int checkWinner() {
-		if(centerX >= 360 && centerX <= 440) {
+		if (centerX >= 360 && centerX <= 440) {
 			if (centerY == 10) {
 				return 1;
-			}else if (centerY == 490) {
+			} else if (centerY == 490) {
 				return 2;
 			}
 		}
@@ -205,32 +276,29 @@ public class Pvee extends JFrame implements ActionListener {
 
 				for (Iterator<VisitedPoints> it2 = visitedList.visited.iterator(); it2.hasNext();) {
 					visit = it2.next();
-					//System.out.println(visit.vis + " " + visit.hasBeenVisited);
+					// System.out.println(visit.vis + " " + visit.hasBeenVisited);
 					if (nowy.x == visit.vis.x && nowy.y == visit.vis.y && visit.hasBeenVisited) {
 						canI3 = false;
 						break;
-					}else if(nowy.x == visit.vis.x && nowy.y == visit.vis.y && !visit.hasBeenVisited) {
+					} else if (nowy.x == visit.vis.x && nowy.y == visit.vis.y && !visit.hasBeenVisited) {
 						visit.setHasBeenVisited(true);
-					}
-					else {
+					} else {
 						canI3 = true;
 
 					}
-					
-					
+
 				}
 
-				
 				centerX = nowy.x;
 				centerY = nowy.y;
-				
+
 				System.out.println("prev x: " + move.prev.x + " prev y: " + move.prev.y + " next x: " + move.next.x
 						+ " next y: " + move.next.y);
 				if (checkPlayer(playerOne)) {
 					playerOne.moves.add(move);
 				} else
 					aie.moves.add(move);
-				
+
 				if (canI3)
 					switchPlayers();
 
@@ -239,7 +307,7 @@ public class Pvee extends JFrame implements ActionListener {
 				System.out.println("nie da sie");
 				move.setNext(centerX, centerY);
 			}
-			
+
 		}
 
 		@Override
@@ -282,7 +350,7 @@ public class Pvee extends JFrame implements ActionListener {
 		setSize(800, 600);
 
 		gamePanel.addMouseListener(mouseL);
-		
+
 		initiatePoints();
 
 		startButton.addActionListener(this);
@@ -411,7 +479,8 @@ public class Pvee extends JFrame implements ActionListener {
 			centerX = 400;
 			centerY = 250;
 			last = p = MouseInfo.getPointerInfo().getLocation();
-			//last.x = p.y = MouseInfo.getPointerInfo().getLocation().y - super.getLocationOnScreen().y;
+			// last.x = p.y = MouseInfo.getPointerInfo().getLocation().y -
+			// super.getLocationOnScreen().y;
 		}
 
 		public void setInterpolation(float interp) {
@@ -420,8 +489,8 @@ public class Pvee extends JFrame implements ActionListener {
 
 		public void update() {
 
-			p.x =  MouseInfo.getPointerInfo().getLocation().x - conP.getLocationOnScreen().x;
-			p.y =  MouseInfo.getPointerInfo().getLocation().y - conP.getLocationOnScreen().y;
+			p.x = MouseInfo.getPointerInfo().getLocation().x - conP.getLocationOnScreen().x;
+			p.y = MouseInfo.getPointerInfo().getLocation().y - conP.getLocationOnScreen().y;
 		}
 
 		public void paintComponent(Graphics g) {
@@ -432,31 +501,29 @@ public class Pvee extends JFrame implements ActionListener {
 			g.fillRect(0, 0, 800, 600);
 
 			g.setColor(Color.black);
-			
-			
-			
-			if(checkWinner() == 1) {
+
+			if (checkWinner() == 1) {
 				running = false;
-				//playerOne.moves.clear();
-				//playerTwo.moves.clear();
+				// playerOne.moves.clear();
+				// playerTwo.moves.clear();
 				clearPoints();
 				dispose();
 				new WinningScreen(400, 200, "Wygral Gracz.");
-			}else if(checkWinner()== 2) {
+			} else if (checkWinner() == 2) {
 				running = false;
-				//playerOne.moves.clear();
-				//playerTwo.moves.clear();
+				// playerOne.moves.clear();
+				// playerTwo.moves.clear();
 				clearPoints();
 				dispose();
 				new WinningScreen(400, 200, "Wygrał Komputer.");
 			}
-			
-			if(checkEnd()) {
+
+			if (checkEnd()) {
 				running = false;
-				//playerOne.moves.clear();
-				//playerTwo.moves.clear();
+				// playerOne.moves.clear();
+				// playerTwo.moves.clear();
 				clearPoints();
-				//dispose();
+				dispose();
 				new WinningScreen(400, 200, "Remis!!!!! ");
 			}
 
@@ -465,7 +532,7 @@ public class Pvee extends JFrame implements ActionListener {
 			} else
 				g.drawString("Ruch komputera", 320, 520);
 
-			for (int i = 0; i < 9; ++i) { //vertical lines
+			for (int i = 0; i < 9; ++i) { // vertical lines
 				g.setColor(Color.BLACK);
 				int x = 240 + (i * 40);
 				int y = 50;
@@ -475,7 +542,7 @@ public class Pvee extends JFrame implements ActionListener {
 				g.drawLine(x - 1, y, w - 1, h);
 				g.drawLine(x + 1, y, w + 1, h);
 			}
-			for (int i = 0; i < 11; ++i) { //horizontal lines
+			for (int i = 0; i < 11; ++i) { // horizontal lines
 				g.setColor(Color.BLACK);
 				int x = 240;
 				int y = 50 + (i * 40);
@@ -506,14 +573,14 @@ public class Pvee extends JFrame implements ActionListener {
 			g.drawLine(360, 490, 360, 450);
 			g.drawLine(440, 490, 440, 450);
 
-			g.drawLine(360, 490-1, 440, 490-1);
-			g.drawLine(360-1, 490, 360-1, 450);
-			g.drawLine(440-1, 490, 440-1, 450);
-			
-			g.drawLine(360, 490+1, 440, 490+1);
-			g.drawLine(360+1, 490, 360+1, 450);
-			g.drawLine(440+1, 490, 440+1, 450);
-			
+			g.drawLine(360, 490 - 1, 440, 490 - 1);
+			g.drawLine(360 - 1, 490, 360 - 1, 450);
+			g.drawLine(440 - 1, 490, 440 - 1, 450);
+
+			g.drawLine(360, 490 + 1, 440, 490 + 1);
+			g.drawLine(360 + 1, 490, 360 + 1, 450);
+			g.drawLine(440 + 1, 490, 440 + 1, 450);
+
 			// drawing of visited lines of player one
 			Iterator<Move> it;
 			Move mov = new Move();
@@ -539,7 +606,7 @@ public class Pvee extends JFrame implements ActionListener {
 				last = p;
 			}
 			g.setColor(Color.black);
-			g.drawString("Pozycja myszy: " + (p.x ) + " " + (p.y), 600, 10);
+			g.drawString("Pozycja myszy: " + (p.x) + " " + (p.y), 600, 10);
 
 			double theta = Math.atan2(p.x - (centerX), p.y - (centerY));
 			theta += Math.PI / 2.0;
@@ -553,12 +620,15 @@ public class Pvee extends JFrame implements ActionListener {
 
 			g.setColor(Color.ORANGE);
 			if (angle > 337.5 || angle <= 22.5) {
-				if ((centerX != 240 && centerY != 50 && centerY != 450) || (centerX == 400 && centerY == 50) || (centerX == 440 && centerY == 50) || (centerX == 440 && centerY == 450) || (centerX == 400 && centerY == 450)) {
+				if ((centerX != 240 && centerY != 50 && centerY != 450) || (centerX == 400 && centerY == 50)
+						|| (centerX == 440 && centerY == 50) || (centerX == 440 && centerY == 450)
+						|| (centerX == 400 && centerY == 450)) {
 					g.drawLine((int) centerX, (int) centerY, (int) centerX - 40, (int) centerY);
 					direction = "W";
 				}
 			} else if (angle > 22.5 && angle <= 67.5) {
-				if ((centerX != 240 && centerY != 450) || (centerX == 400 && centerY == 450) || (centerX == 440 && centerY == 450)) {
+				if ((centerX != 240 && centerY != 450) || (centerX == 400 && centerY == 450)
+						|| (centerX == 440 && centerY == 450)) {
 					g.drawLine((int) centerX, (int) centerY, (int) centerX - 40, (int) centerY + 40);
 					direction = "SW";
 				}
@@ -568,17 +638,21 @@ public class Pvee extends JFrame implements ActionListener {
 					direction = "S";
 				}
 			} else if (angle > 112.5 && angle <= 157.5) {
-				if ((centerX != 560 && centerY != 450) || (centerX == 400 && centerY == 450) || (centerX == 360 && centerY == 450)) {
+				if ((centerX != 560 && centerY != 450) || (centerX == 400 && centerY == 450)
+						|| (centerX == 360 && centerY == 450)) {
 					g.drawLine((int) centerX, (int) centerY, (int) centerX + 40, (int) centerY + 40);
 					direction = "SE";
 				}
 			} else if (angle > 157.5 && angle <= 202.5) {
-				if ((centerX != 560 && centerY != 50 && centerY != 450) || (centerX == 400 && centerY == 50) || (centerX == 360 && centerY == 50) || (centerX == 360 && centerY == 450) || (centerX == 400 && centerY == 450)) {
+				if ((centerX != 560 && centerY != 50 && centerY != 450) || (centerX == 400 && centerY == 50)
+						|| (centerX == 360 && centerY == 50) || (centerX == 360 && centerY == 450)
+						|| (centerX == 400 && centerY == 450)) {
 					g.drawLine((int) centerX, (int) centerY, (int) centerX + 40, (int) centerY);
 					direction = "E";
 				}
 			} else if (angle > 202.5 && angle <= 247.5) {
-				if ((centerX != 560 && centerY != 50) || (centerX == 400 && centerY == 50) || (centerX == 360 && centerY == 50)) {
+				if ((centerX != 560 && centerY != 50) || (centerX == 400 && centerY == 50)
+						|| (centerX == 360 && centerY == 50)) {
 					g.drawLine((int) centerX, (int) centerY, (int) centerX + 40, (int) centerY - 40);
 					direction = "NE";
 				}
@@ -588,19 +662,20 @@ public class Pvee extends JFrame implements ActionListener {
 					direction = "N";
 				}
 			} else if (angle > 292.5 && angle <= 337.5) {
-				if ((centerX != 240 && centerY != 50) || (centerX == 400 && centerY == 50) || (centerX == 440 && centerY == 50)) {
+				if ((centerX != 240 && centerY != 50) || (centerX == 400 && centerY == 50)
+						|| (centerX == 440 && centerY == 50)) {
 					g.drawLine((int) centerX, (int) centerY, (int) centerX - 40, (int) centerY - 40);
 					direction = "NW";
 				}
 			}
-			
-			if(!checkPlayer(playerOne)) {
-//				try {
-//					Thread.sleep(400);
-//				} catch (InterruptedException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
+
+			if (!checkPlayer(playerOne)) {
+				// try {
+				// Thread.sleep(400);
+				// } catch (InterruptedException e) {
+				// // TODO Auto-generated catch block
+				// e.printStackTrace();
+				// }
 				direction = aie.chooseMove();
 				System.out.println(direction + "  !!!i am CPU!!!");
 				Move move = new Move();
@@ -612,32 +687,36 @@ public class Pvee extends JFrame implements ActionListener {
 				} else if (direction.equals("N")) {
 					if ((centerX != 240 && centerX != 560 && centerY != 50) || (centerX == 400 && centerY == 50)) {
 						nowy.y -= 40;
-					}else {
+					} else {
 						System.out.println("NIE WOLNO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 						canI3 = false;
 					}
 				} else if (direction.equals("NE")) {
-					if ((centerX != 560 && centerY != 50) || (centerX == 400 && centerY == 50) || (centerX == 360 && centerY == 50)) {
-							nowy.x += 40;
-							nowy.y -= 40;
-						}else {
-							System.out.println("NIE WOLNO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-							canI3 = false;
+					if ((centerX != 560 && centerY != 50) || (centerX == 400 && centerY == 50)
+							|| (centerX == 360 && centerY == 50)) {
+						nowy.x += 40;
+						nowy.y -= 40;
+					} else {
+						System.out.println("NIE WOLNO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+						canI3 = false;
 					}
 					move.setNext(centerX, centerY);
 				} else if (direction.equals("E")) {
-					if ((centerX != 560 && centerY != 50 && centerY != 450) || (centerX == 400 && centerY == 50) || (centerX == 360 && centerY == 50) || (centerX == 360 && centerY == 450) || (centerX == 400 && centerY == 450)) {
+					if ((centerX != 560 && centerY != 50 && centerY != 450) || (centerX == 400 && centerY == 50)
+							|| (centerX == 360 && centerY == 50) || (centerX == 360 && centerY == 450)
+							|| (centerX == 400 && centerY == 450)) {
 						nowy.x += 40;
-						}else {
-							System.out.println("NIE WOLNO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-							canI3 = false;
-						}
+					} else {
+						System.out.println("NIE WOLNO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+						canI3 = false;
+					}
 					move.setNext(centerX, centerY);
 				} else if (direction.equals("SE")) {
-					if ((centerX != 560 && centerY != 450) || (centerX == 400 && centerY == 450) || (centerX == 360 && centerY == 450)) {
+					if ((centerX != 560 && centerY != 450) || (centerX == 400 && centerY == 450)
+							|| (centerX == 360 && centerY == 450)) {
 						nowy.x += 40;
 						nowy.y += 40;
-					}else {
+					} else {
 						System.out.println("NIE WOLNO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 						canI3 = false;
 					}
@@ -645,33 +724,37 @@ public class Pvee extends JFrame implements ActionListener {
 				} else if (direction.equals("S")) {
 					if ((centerX != 240 && centerX != 560 && centerY != 450) || (centerX == 400 && centerY == 450)) {
 						nowy.y += 40;
-					}else {
+					} else {
 						System.out.println("NIE WOLNO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 						canI3 = false;
 					}
 					move.setNext(centerX, centerY);
 				} else if (direction.equals("SW")) {
-					if ((centerX != 240 && centerY != 450) || (centerX == 400 && centerY == 450) || (centerX == 440 && centerY == 450)) {
+					if ((centerX != 240 && centerY != 450) || (centerX == 400 && centerY == 450)
+							|| (centerX == 440 && centerY == 450)) {
 						nowy.x -= 40;
 						nowy.y += 40;
-					}else {
+					} else {
 						System.out.println("NIE WOLNO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 						canI3 = false;
 					}
 					move.setNext(centerX, centerY);
 				} else if (direction.equals("W")) {
-					if ((centerX != 240 && centerY != 50 && centerY != 450) || (centerX == 400 && centerY == 50) || (centerX == 440 && centerY == 50) || (centerX == 440 && centerY == 450) || (centerX == 400 && centerY == 450)) {
-						nowy.x -= 40;						
-					}else {
+					if ((centerX != 240 && centerY != 50 && centerY != 450) || (centerX == 400 && centerY == 50)
+							|| (centerX == 440 && centerY == 50) || (centerX == 440 && centerY == 450)
+							|| (centerX == 400 && centerY == 450)) {
+						nowy.x -= 40;
+					} else {
 						System.out.println("NIE WOLNO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 						canI3 = false;
 					}
 					move.setNext(centerX, centerY);
 				} else if (direction.equals("NW")) {
-					if ((centerX != 240 && centerY != 50) || (centerX == 400 && centerY == 50) || (centerX == 440 && centerY == 50)) {
+					if ((centerX != 240 && centerY != 50) || (centerX == 400 && centerY == 50)
+							|| (centerX == 440 && centerY == 50)) {
 						nowy.x -= 40;
 						nowy.y -= 40;
-					}else {
+					} else {
 						System.out.println("NIE WOLNO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 						canI3 = false;
 					}
@@ -706,14 +789,13 @@ public class Pvee extends JFrame implements ActionListener {
 
 					for (Iterator<VisitedPoints> it2 = visitedList.visited.iterator(); it2.hasNext();) {
 						visit = it2.next();
-						//System.out.println(visit.vis + " " + visit.hasBeenVisited);
+						// System.out.println(visit.vis + " " + visit.hasBeenVisited);
 						if (nowy.x == visit.vis.x && nowy.y == visit.vis.y && visit.hasBeenVisited) {
 							canI3 = false;
 							break;
-						}else if(nowy.x == visit.vis.x && nowy.y == visit.vis.y && !visit.hasBeenVisited) {
+						} else if (nowy.x == visit.vis.x && nowy.y == visit.vis.y && !visit.hasBeenVisited) {
 							visit.setHasBeenVisited(true);
-						}
-						else {
+						} else {
 							canI3 = true;
 
 						}
@@ -721,14 +803,14 @@ public class Pvee extends JFrame implements ActionListener {
 
 					centerX = nowy.x;
 					centerY = nowy.y;
-					
+
 					System.out.println("prev x: " + move.prev.x + " prev y: " + move.prev.y + " next x: " + move.next.x
 							+ " next y: " + move.next.y);
 					if (checkPlayer(playerOne)) {
 						playerOne.moves.add(move);
 					} else
 						aie.moves.add(move);
-					
+
 					if (canI3)
 						switchPlayers();
 
@@ -740,7 +822,6 @@ public class Pvee extends JFrame implements ActionListener {
 					nowy.y = (int) centerY;
 				}
 
-				
 			}
 
 			g.setColor(Color.BLACK);
@@ -752,44 +833,55 @@ public class Pvee extends JFrame implements ActionListener {
 			frameCount++;
 		}
 	}
+
 	Boolean checkEnd() {
-		
+
 		Move mov = new Move();
 		mov.setPrev(centerX, centerY);
-		
+
 		Point end = new Point();
-		
+
 		end.x = (int) centerX;
 		end.y = (int) centerY;
 		int j;
-		for(j = 0; j < 8; j++) {
-			
-			//System.out.println(j);
-				if (j == 0) { end.y = (int)centerY - 40;
-				} 
-				if(j == 1) { 	end.x = (int)centerX + 40;
-							end.y = (int)centerY - 40;
-						}
-				if(j == 2) { 	end.x = (int)centerX + 40;
-						}
-				if(j == 3) { 	end.x = (int)centerX + 40;
-							end.y = (int)centerY + 40;
-						}
-				if(j == 4) {
-							end.y = (int)centerY + 40;
-						}
-				if(j == 5) { 	end.x = (int)centerX - 40;
-							end.y = (int)centerY + 40;
-						}
-				if(j == 6) { 	end.x = (int)centerX - 40;
-						}
-				if (j == 8) { 	end.x = (int)centerX - 40;
-							end.y = (int)centerY - 40;
-						}
-			
-			//System.out.println(centerX + " " + centerY);
-			//System.out.println(end);
-			
+		for (j = 0; j < 8; j++) {
+
+			// System.out.println(j);
+			if (j == 0) {
+				end.y = (int) centerY - 40;
+			}
+			if (j == 1) {
+				end.x = (int) centerX + 40;
+				end.y = (int) centerY - 40;
+			}
+			if (j == 2) {
+				end.x = (int) centerX + 40;
+				end.y = (int) centerY;
+			}
+			if (j == 3) {
+				end.x = (int) centerX + 40;
+				end.y = (int) centerY + 40;
+			}
+			if (j == 4) {
+				end.x = (int) centerX;
+				end.y = (int) centerY + 40;
+			}
+			if (j == 5) {
+				end.x = (int) centerX - 40;
+				end.y = (int) centerY + 40;
+			}
+			if (j == 6) {
+				end.x = (int) centerX - 40;
+				end.y = (int) centerY;
+			}
+			if (j == 7) {
+				end.x = (int) centerX - 40;
+				end.y = (int) centerY - 40;
+			}
+
+			// System.out.println(centerX + " " + centerY);
+			// System.out.println(end);
+
 			for (Iterator<Move> it = playerOne.moves.iterator(); it.hasNext();) {
 				mov = it.next();
 				if ((centerX == mov.prev.x && centerY == mov.prev.y && end.x == mov.next.x && end.y == mov.next.y)
@@ -799,7 +891,7 @@ public class Pvee extends JFrame implements ActionListener {
 					break;
 				} else {
 					canI = true;
-					
+
 				}
 			}
 
@@ -807,19 +899,30 @@ public class Pvee extends JFrame implements ActionListener {
 				mov = it.next();
 				if ((centerX == mov.prev.x && centerY == mov.prev.y && end.x == mov.next.x && end.y == mov.next.y)
 						|| (centerX == mov.next.x && centerY == mov.next.y && end.x == mov.prev.x
-						&& end.y == mov.prev.y)) {
+								&& end.y == mov.prev.y)) {
 					canI2 = false;
 					break;
 				} else {
 					canI2 = true;
 				}
 			}
-			if(canI && canI2) {
+			for (Iterator<Move> it = invisibleOne.moves.iterator(); it.hasNext();) {
+				mov = it.next();
+				if ((centerX == mov.prev.x && centerY == mov.prev.y && end.x == mov.next.x && end.y == mov.next.y)
+						|| (centerX == mov.next.x && centerY == mov.next.y && end.x == mov.prev.x
+								&& end.y == mov.prev.y)) {
+					canI3 = false;
+					break;
+				} else {
+					canI3 = true;
+				}
+			}
+			if (canI && canI2 && canI3) {
 				return false;
 			}
-			
+
 		}
-		
+
 		return true;
 	}
 }
