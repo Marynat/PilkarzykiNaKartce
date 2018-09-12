@@ -28,16 +28,16 @@ public class MainMenu extends JFrame {
 		});
         add(newGame);
         
-        settings.setBounds(WIDTH/2 - 100, 90, 200, 30);
-        settings.setBackground(Color.YELLOW);
-        settings.setForeground(Color.BLUE);
-        settings.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				dispose();
-				new Settings();	//tworzymy obiekt okna settings po kliknieciu
-			}
-		});
-        add(settings);
+//        settings.setBounds(WIDTH/2 - 100, 90, 200, 30);
+//        settings.setBackground(Color.YELLOW);
+//        settings.setForeground(Color.BLUE);
+//        settings.addActionListener(new ActionListener() {
+//			public void actionPerformed(ActionEvent e) {
+//				dispose();
+//				new Settings();	//tworzymy obiekt okna settings po kliknieciu
+//			}
+//		});
+//        add(settings);
         
         exit.setBounds(WIDTH/2 - 100, 140, 200, 30);
         exit.setBackground(Color.YELLOW);

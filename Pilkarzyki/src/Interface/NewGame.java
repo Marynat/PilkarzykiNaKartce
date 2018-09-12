@@ -10,12 +10,12 @@ import javax.swing.JFrame;
 import Game.Pvp;
 import Game.MainScreenFrame;
 import Game.Pvee;
-import Game.Pveh;
+//import Game.Pveh;
 
 public class NewGame extends JFrame{
 
 	JButton pvp = new JButton("Gracz vs Gracz");
-	JButton pvee = new JButton("Gracz vs Komputer (latwy)");
+	JButton pvee = new JButton("Gracz vs Komputer");
 	JButton pveh = new JButton("Gracz vs Komputer (trudny)");
 	JButton back = new JButton("Wstecz");
 
@@ -44,17 +44,17 @@ public class NewGame extends JFrame{
 		});
 		add(pvee);
 
-		pveh.setBounds(300, 140, 200, 30);
-		pveh.setBackground(Color.YELLOW);
-		pveh.setForeground(Color.BLUE);
-		pveh.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				dispose();
-				Pveh comp3 = new Pveh();
-				comp3.setVisible(true);
-			}
-		});
-		add(pveh);
+//		pveh.setBounds(300, 140, 200, 30);
+//		pveh.setBackground(Color.YELLOW);
+//		pveh.setForeground(Color.BLUE);
+//		pveh.addActionListener(new ActionListener() {
+//			public void actionPerformed(ActionEvent e) {
+//				dispose();
+//				Pveh comp3 = new Pveh();
+//				comp3.setVisible(true);
+//			}
+//		});
+//		add(pveh);
 
 		back.setBounds(300, 190, 200, 30);
 		back.setBackground(Color.YELLOW);
