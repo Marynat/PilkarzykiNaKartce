@@ -888,6 +888,7 @@ public class Pvee extends JFrame implements ActionListener {
 						|| (centerX == mov.next.x && centerY == mov.next.y && end.x == mov.prev.x
 								&& end.y == mov.prev.y)) {
 					canI = false;
+					System.out.println("am i here?1");
 					break;
 				} else {
 					canI = true;
@@ -901,6 +902,7 @@ public class Pvee extends JFrame implements ActionListener {
 						|| (centerX == mov.next.x && centerY == mov.next.y && end.x == mov.prev.x
 								&& end.y == mov.prev.y)) {
 					canI2 = false;
+					System.out.println("am i here?2");
 					break;
 				} else {
 					canI2 = true;
@@ -912,6 +914,7 @@ public class Pvee extends JFrame implements ActionListener {
 						|| (centerX == mov.next.x && centerY == mov.next.y && end.x == mov.prev.x
 								&& end.y == mov.prev.y)) {
 					canI3 = false;
+					System.out.println("am i here?3");
 					break;
 				} else {
 					canI3 = true;
