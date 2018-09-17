@@ -44,17 +44,6 @@ public class NewGame extends JFrame{
 		});
 		add(pvee);
 
-//		pveh.setBounds(300, 140, 200, 30);
-//		pveh.setBackground(Color.YELLOW);
-//		pveh.setForeground(Color.BLUE);
-//		pveh.addActionListener(new ActionListener() {
-//			public void actionPerformed(ActionEvent e) {
-//				dispose();
-//				Pveh comp3 = new Pveh();
-//				comp3.setVisible(true);
-//			}
-//		});
-//		add(pveh);
 
 		back.setBounds(300, 190, 200, 30);
 		back.setBackground(Color.YELLOW);

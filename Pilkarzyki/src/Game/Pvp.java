@@ -28,7 +28,7 @@ public class Pvp extends JFrame implements ActionListener {
 
 	private GamePanel gamePanel = new GamePanel();		//obiekt klasy game panel
 	private JButton startButton = new JButton("Start");	//przyciski
-	private JButton quitButton = new JButton("Quit");
+	private JButton quitButton = new JButton("Wyjdz");
 	private boolean running = false;	//zmienne do dzialania i zatrzymywania gry
 	private boolean paused = false;
 	double centerX;	//zmienne srodka gry
@@ -536,12 +536,12 @@ public class Pvp extends JFrame implements ActionListener {
 				running = false;
 				clearPoints();
 				dispose();
-				new WinningScreen(400, 200, "Wygral gracz nr. jeden.");
+				new WinningScreen(400, 200, "Wygra≥ gracz nr. jeden.");
 			}else if(checkWinner()== 2) {
 				running = false;
 				clearPoints();
 				dispose();
-				new WinningScreen(400, 200, "Wygra≈Ç gracz nr. dwa.");
+				new WinningScreen(400, 200, "Wygra≥Ç gracz nr. dwa.");
 			}
 
 			frameCount++;

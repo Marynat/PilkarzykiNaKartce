@@ -17,6 +17,7 @@ import java.util.Iterator;
 import java.util.Random;
 
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
@@ -28,7 +29,7 @@ public class Pvee extends JFrame implements ActionListener {
 
 	private GamePanel gamePanel = new GamePanel();
 	private JButton startButton = new JButton("Start");
-	private JButton quitButton = new JButton("Quit");
+	private JButton quitButton = new JButton("Wyjdz");
 	private boolean running = false;
 	private boolean paused = false;
 	double centerX;
@@ -338,7 +339,7 @@ public class Pvee extends JFrame implements ActionListener {
 	private int frameCount = 0;
 
 	public Pvee() {
-		super("Gracz vs komputer (latwy)");
+		super("Gracz vs komputer");
 		conP = getContentPane();
 		conP.setLayout(new BorderLayout());
 		JPanel p = new JPanel();
